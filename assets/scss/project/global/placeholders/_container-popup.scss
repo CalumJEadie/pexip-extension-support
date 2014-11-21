@@ -1,0 +1,13 @@
+%container-popup {
+  background-color: rgba($color-black, 0.5);
+  border-radius: 5px;
+  border: .5em solid $color-brand;
+  color: $color-white;
+  margin-top: -100px;
+  margin-left: -150px;
+  padding: 2em;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 33%;
+}

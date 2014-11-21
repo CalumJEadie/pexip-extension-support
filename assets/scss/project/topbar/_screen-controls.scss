@@ -1,0 +1,24 @@
+.screen-controls {
+  background: $color-black-almost;
+  border-bottom: 1px solid $color-screen-controls__border;
+  color: $color-white;
+  height: 3em;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  text-align: center;
+
+  .settings__menu {
+    // z-index: 1000;
+    z-index: z("participant");
+  }
+
+  .icon {
+    border: 0;
+    bottom: .1em;
+    color: $color-white;
+    position: absolute;
+    top: 0;
+  }
+}

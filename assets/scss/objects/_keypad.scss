@@ -1,0 +1,97 @@
+.keypad {
+  margin: 0;
+  text-align: center;
+  width: auto;
+
+  // @include media-query(desk) {
+  //   top: 25%;
+  // }
+
+  // @include media-query(portable) {
+  //   left: 25%;
+  //   top: 15%;
+  // }
+
+  &__wrapper {
+    background: rgba($color-black, .75);
+    box-shadow: rgba($color-black,.1) 0 0 10px;
+    display: table;
+  }
+
+  &__row {
+    display: table-row;
+  }
+
+  &__item {
+    border-collapse: separate;
+    color: $color-grey;
+    cursor: pointer;
+    display: table-cell;
+    padding: .5em;
+    text-align: center;
+    width: 20%;
+
+      &:hover {
+        background: rgba($color-white, .15);
+        color: $color-white;
+
+        .keypad__letters {
+          color: $color-grey-light;
+        }
+      }
+
+      &:active {
+        background: rgba($color-black-almost, 0.75);
+      }
+  }
+
+  &__key {
+    @include font-size(1);
+  }
+
+  &__letters {
+    @include font-size(.9);
+    color: $color-grey-mid;
+    display: block;
+    min-height: 1.5em;
+  }
+
+}
+
+
+
+.keypad-container.ng-hide-add.ng-hide-add-active .keypad,
+// ng-hide-add ng-hide-add-active get added when ng-hide is active
+.keypad-container.ng-hide-remove.ng-hide-remove-active .keypad {
+  -webkit-transition: 0.2s linear all;
+  transition: 0.2s linear all;
+}
+
+.keypad-container.ng-show .keypad {
+  -webkit-animation: slideInDown 0.2s;
+  animation: slideInDown 0.2s;
+}
+
+.keypad-container.ng-hide-add .keypad {
+  -webkit-transition: 0.2s linear all;
+  transition: 0s linear all;
+  opacity: 1;
+}
+
+.keypad-container.ng-hide-add-active .keypad {
+  -webkit-transition: 0.2s linear all;
+  transition: 0.2s linear all;
+  top: 100%;
+}
+
+.keypad-container.ng-hide .keypad {
+  -webkit-animation: slideInUp 0.2s;
+  animation: slideInUp 0.2s;
+  top: 100%;
+}
+
+.keypad-container .keypad {
+  -webkit-animation: slideInUp 0.2s;
+  animation: slideInUp 0.2s;
+  top: 25%;
+}

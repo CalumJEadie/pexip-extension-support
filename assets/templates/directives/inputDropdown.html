@@ -1,0 +1,5 @@
+<div ng-show="visible" tabindex="-1">
+	<div class="autocomplete__container" tabindex="-1">
+		<div class="autocomplete__item" ng-click="clickItem(item);" ng-repeat="item in filteredData" ng-class="{ 'selected': item===selectedItem }" tabindex="-1">{{ item }}</div>
+	</div>
+</div>

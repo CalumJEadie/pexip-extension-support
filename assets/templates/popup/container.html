@@ -1,0 +1,6 @@
+<div>
+	<div ng-repeat="popupItem in items" class="repeat-item" ng-class="{ popup__toast__repeat: popupItem.popupType==='toast' }">
+		<!-- create a popup-alert for this item -->
+		<div popup-alert message="popupItem.message" popup-type="popupItem.popupType" buttons="popupItem.buttons" updater="popupItem.updater" data="popupItem.data" index="{{popupItem.index}}" timestamp="{{ popupItem.timestamp }}" options="popupItem.options"></div>
+	</div>
+</div>

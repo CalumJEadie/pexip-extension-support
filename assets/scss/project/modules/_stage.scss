@@ -1,0 +1,25 @@
+.stage {
+
+  // -webkit-transition: max-width .5s ease;
+  // transition: max-width .5s ease;
+
+  &--min {
+    @extend %minimise;
+    @extend %transparent;
+    @extend %transition--opacity;
+  }
+
+  &--max {
+    // z-index: 1;
+    z-index: z("default");
+  }
+
+  &__child {
+
+    &.active {
+      @extend %orange-border;
+      cursor: pointer;
+    }
+  }
+
+}

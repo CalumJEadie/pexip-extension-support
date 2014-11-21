@@ -1,0 +1,36 @@
+.sidebar {
+  @extend %unselectable;
+  background: $color-white-off;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  width: 25%;
+  // z-index: 9999;
+  z-index: z("always-on-top");
+
+  @include media-query(portable) {
+    @include vendor(transition, left .3s);
+    left: 0%;
+    width: 100%;
+
+    &.collapse {
+      left: -100%;
+    }
+  }
+
+  &__message {
+    left: 0;
+    padding: 2em;
+    position: absolute;
+    right: 0;
+    top: 3em;
+
+    p {
+      background: $color-white;
+      box-shadow: rgba($color-black, .05) 0 2px 10px;
+      padding: 1.5em;
+    }
+  }
+}

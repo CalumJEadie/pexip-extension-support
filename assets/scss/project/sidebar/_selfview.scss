@@ -1,0 +1,30 @@
+.selfview {
+  @include vendor(transition, all .3s);
+  position: absolute;
+  bottom: -500px;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  padding-bottom: 56.25%;
+  background: $color-white;
+  cursor: pointer;
+  // z-index: 1;
+  z-index: z("default");
+
+  &.visible {
+    bottom: 0;
+    opacity: 1;
+  }
+
+  figure {
+    position: absolute;
+    top: .25em;
+    left: .25em;
+    bottom: .25em;
+    right: .25em;
+    background: $color-black;
+    background-size: cover;
+    margin: 0;
+  }
+}
+

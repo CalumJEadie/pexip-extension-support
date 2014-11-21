@@ -1,0 +1,63 @@
+.participant {
+  border-bottom: 1px solid $color-border;
+  list-style: none;
+  position: relative;
+
+  &:last-child {
+    border: none;
+  }
+
+  a {
+    display: block;
+  }
+
+  &__name {
+    @extend %user-select-text;
+    color: $color-participant__name;
+    font-weight: 400;
+    padding: 1em 2em;
+  }
+
+  &__role {
+    @extend %sans-serif-light;
+    color: $color-grey;
+  }
+
+  &__name,
+  &__role {
+    margin-right: 3em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__menuToggle.icon {
+    color: $color-participant__name;
+    height: 2em;
+    position: absolute;
+    right: 1.1em;
+    text-align: center;
+    top: 25%;
+    width: 2em;
+
+    &.fa {
+      font-size: 1em;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__menu {
+    left: auto;
+    right: 1em;
+    // z-index: 1000;
+    z-index: z("participant");
+
+    &:after {
+      left: auto;
+      right: 1.2em;
+    }
+  }
+}

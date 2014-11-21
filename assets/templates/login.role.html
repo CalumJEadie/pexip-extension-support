@@ -1,0 +1,22 @@
+<form class="form" ng-submit="selectRole()">
+
+  <header class="form__header">
+    <h2 class="form__heading" translate>LOGIN_HEADING_SELECT_ROLE</h2>
+  </header>
+
+  <div ng-show="message" ng-click="message = ''" class="form__alert">{{ message }}</div>
+
+  <div class="form__field">
+    <label class="form__inline__label" for="user-role-guest-field">
+      <input id="user-role-guest-field" type="radio" ng-checked="true" autofocus ng-model="user.role" value="GUEST"><span translate>LOBBY_JOIN_AS_GUEST</span>
+    </label>
+    <label class="form__inline__label" for="user-role-host-field">
+      <input id="user-role-host-field" type="radio" ng-model="user.role" value="HOST"><span translate>LOBBY_JOIN_AS_HOST</span>
+    </label>
+  </div>
+
+  <div class="form__buttons">
+    <button class="form__submit" translate>NEXT</button>
+  </div>
+
+</form>

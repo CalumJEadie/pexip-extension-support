@@ -1,0 +1,52 @@
+.settings {
+
+  &__menu {
+    background: $color-white;
+    box-shadow: rgba($color-black, .4) 0 4px 10px;
+    left: 1em;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    text-align: left;
+    top: 3em;
+
+    &:after {
+      border-left: .4em solid transparent;
+      border-right: .4em solid transparent;
+      border-bottom: .4em solid $color-black;
+      content: "";
+      left: 1.2em;
+      position: absolute;
+      top: -.4em;
+    }
+
+    li {
+      list-style: none;
+
+      &.videoToggle {
+        display: none;
+      }
+
+      &:last-child a {
+        border: 0;
+      }
+    }
+
+    a {
+      @extend %sans-serif-light;
+      background: $color-black;
+      border-bottom: 1px solid $color-settings__menu-border;
+      color: $color-white;
+      display: block;
+      font-weight: fw("book");
+      line-height: 1;
+      padding: 1em 1em .95em;
+      white-space: nowrap;
+
+      &:hover {
+        background: $color-black-almost;
+        color: $color-white;
+      }
+    }
+  }
+}

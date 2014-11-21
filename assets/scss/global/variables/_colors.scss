@@ -1,0 +1,38 @@
+$color-black-almost: #222;
+$color-black: #000;
+$color-grey: #999;
+$color-grey-light: #ccc;
+$color-grey-mid: #ccc;
+$color-grey-dark: #444;
+$color-white: #fff;
+$color-white-off: #eee;
+
+$color-orange: #f38b3c;
+// Hex: #F38B3C
+// HSL: 26° 88% 59%
+// RGB: 243 139 60
+
+$color-orange-dark: #d07125;
+// Hex: #D07125
+// HSL: 27° 70% 48%
+// RGB: 208 113 37
+
+$color-green: #9dca51;
+$color-red: #a2433d;
+
+$color-text: $color-black-almost;
+$color-text-light: #777;
+$color-text-inactive: #bbb;
+$color-background: $color-white-off;
+$color-negative: $color-red;
+$color-positive: $color-green;
+$color-brand: $color-orange;
+
+$color-border: #ddd;
+$color-form-label: #777;
+$color-form-label-input: #666;
+$color-participant__name: #333;
+$color-settings__menu-border: #333;
+$color-screen-controls__border: #252525;
+$color-stage__background: #1a1b1a;
+$color-audio-only__background: #333;

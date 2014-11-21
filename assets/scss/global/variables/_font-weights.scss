@@ -1,0 +1,21 @@
+/**
+ * Human-readable Font-weights
+ *
+ * @type Map
+ * https://github.com/guardian/guss-webfonts/blob/master/_webfonts.config.scss#L42
+ */
+$font-weights: (
+    'thin':       100,
+    'light':      200,
+    'book':       300,
+    'regular':    400,
+    'medium':     500,
+    'semibold':   600,
+    'bold':       700,
+    'black':      800,
+    'ultrablack': 900
+) !default;
+
+@function fw($keyword) {
+    @return map-get($font-weights, $keyword);
+}

@@ -1,0 +1,16 @@
+.participants {
+  position: absolute;
+  top: 6em;
+  left: 0;
+  right: 0;
+  border: 0;
+  overflow: auto;
+  border-bottom: 1px solid $color-border;
+  bottom: 0;
+  padding-bottom: 500px;
+
+  ul {
+    margin: 0;
+    background-attachment: scroll;
+  }
+}

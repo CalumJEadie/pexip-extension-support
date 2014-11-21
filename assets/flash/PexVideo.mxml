@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+         xmlns:s="library://ns.adobe.com/flex/spark"
+         xmlns:mx="library://ns.adobe.com/flex/mx"
+         backgroundColor="#222"
+         creationComplete="appComplete();" >
+  <!--"0x262626"-->
+  <fx:Script>
+    <![CDATA[
+        import flash.media.Video;
+        import flash.media.Microphone;
+        import flash.net.NetConnection;
+        import flash.net.NetStream;
+        import flash.events.*;
+        import flash.external.ExternalInterface;
+        import mx.core.FlexGlobals;
+        import flash.events.ErrorEvent;
+        import flash.events.UncaughtErrorEvent;
+
+        public static var STAGE:Stage;
+        private var _outgoingNetConnection:NetConnection = null;
+        private var _incomingNetConnection:NetConnection = null;
+        private var _bandwidth:Number = 0;
+
+
+        private var _outgoingStream:NetStream = null;
+        private var _incomingStream:NetStream = null;
+
+        private var _camera:Camera = null;
+        private var _video:Video = null;
+        private var _selfview:Video = null;
+        private var _selfviewScale:Number = 1.0/5;
+        private var _offsetX:Number = 0;
+        private var _offsetY:Number = 0;
+
+        private var _microphone:Microphone = null;
+
+        private var _shouldPublish:Boolean = false;
+        private var _shouldPlayRTMP:Boolean = false;
+
+        private var _incoming_height:int;
+        private var _incoming_width:int;
+
+        private var _rtmpServerAddress:String;
+        private var _uuid:String;
+        private var _displayName:String;
+        private var _showingSelfview:Boolean;
+        private var _showingVideo:Boolean;
+        private var _showingAudio:Boolean;
+        private var _video_source:String;
+        private var _audio_source:int;
+        private var _lastDownspeed:Date;
+        private var _lastLostFrames:int;
+
+        private var _outgoingTransform:SoundTransform;
+
+        public function do_trace(value:String):void {
+            var s:String;
+            if (ExternalInterface.available) {
+                var wrapperFunction:String = "console.log";
+                s = ExternalInterface.call(wrapperFunction, value);
+            } else {
+                s = "Wrapper not available";
+            }
+            trace(s);
+        }
+
+        private function callFunctionInAngular(func_name:String):void {
+            ExternalInterface.call("callAngularScopeFunc", func_name);
+        }
+
+        private function getBandwidth():Number {
+          return _bandwidth;
+        }
+
+        private function downSpeed(bandwidth:Number):void {
+          do_trace("Downspeeding to " + bandwidth);
+          _bandwidth = bandwidth;
+          _camera.setQuality(_bandwidth * 1000 / 8, 0);
+        }
+
+        private function showSelfview():void {
+          _showingSelfview = true;
+          if (!_camera) {
+            return;
+          }
+          var ratio:Number = _camera.height / _camera.width;
+          _selfview = new Video(this.width * _selfviewScale, this.width * ratio * _selfviewScale);
+          _selfview.smoothing = true;
+          _selfview.y = 5;
+          _selfview.x = this.width - _selfview.width - 5;
+          _selfview.attachCamera(_camera);
+          remoteVideoDisplay.addEventListener(MouseEvent.MOUSE_DOWN, startDraggingSelfview);
+          remoteVideoDisplay.addEventListener(MouseEvent.MOUSE_UP, stopDraggingSelfview);
+          remoteVideoDisplay.addChild(_selfview);
+        }
+
+        private function startDraggingSelfview(event:MouseEvent):void
+        {
+          _offsetX = event.stageX - _selfview.x;
+          _offsetY = event.stageY - _selfview.y;
+          stage.addEventListener(MouseEvent.MOUSE_MOVE, dragSelfview);
+          stage.addEventListener(Event.MOUSE_LEAVE, stopDraggingSelfview);
+
+
+        }
+
+        private function stopDraggingSelfview(event:Object):void
+        {
+          stage.removeEventListener(MouseEvent.MOUSE_MOVE, dragSelfview);
+          stage.removeEventListener(Event.MOUSE_LEAVE, stopDraggingSelfview);
+        }
+
+        private function dragSelfview(event:MouseEvent):void
+        {
+          _selfview.x = event.stageX - _offsetX;
+          if (_selfview.x < 0) {
+            _selfview.x = 0;
+          }
+          if (_selfview.x + _selfview.width > stage.stageWidth) {
+            _selfview.x = stage.stageWidth - _selfview.width;
+          }
+
+          _selfview.y = event.stageY - _offsetY;
+          if (_selfview.y < 0) {
+            _selfview.y = 0;
+          }
+          if (_selfview.y + _selfview.height > stage.stageHeight) {
+            _selfview.y = stage.stageHeight - _selfview.height;
+          }
+
+          event.updateAfterEvent();
+        }
+
+      private function hideSelfview():void {
+        _showingSelfview = false;
+        _selfview.attachCamera(null);
+        remoteVideoDisplay.removeChild(_selfview);
+        remoteVideoDisplay.removeEventListener(MouseEvent.MOUSE_DOWN, startDraggingSelfview);
+        remoteVideoDisplay.removeEventListener(MouseEvent.MOUSE_UP, stopDraggingSelfview);
+        _selfview = null;
+      }
+
+      private function toggleSelfview():void {
+        if (_showingSelfview) {
+          hideSelfview();
+        }
+        else {
+          showSelfview();
+        }
+      }
+
+      private function appComplete():void
+      {
+        NetConnection.defaultObjectEncoding = ObjectEncoding.AMF0;
+        do_trace("Stage: " + (this.stage == null).toString());
+
+        ExternalInterface.addCallback("getMediaStatistics", getMediaStatistics);
+        ExternalInterface.addCallback("startCall", both);
+        ExternalInterface.addCallback("showSelfview", showSelfview);
+        ExternalInterface.addCallback("hideSelfview", hideSelfview);
+        ExternalInterface.addCallback("toggleSelfview", toggleSelfview);
+        ExternalInterface.addCallback("toggleMuteVideo", toggleMuteVideo);
+        ExternalInterface.addCallback("toggleMuteAudio", toggleMuteAudio);
+        ExternalInterface.addCallback("enumerateVideoSources", enumerateVideoSources);
+        ExternalInterface.addCallback("enumerateAudioSources", enumerateAudioSources);
+        ExternalInterface.addCallback("getBandwidth", getBandwidth);
+        ExternalInterface.addCallback("downSpeed", downSpeed);
+
+        callFunctionInAngular("flash_is_ready");
+
+        var getMediaStatisticsTimer:Timer = new Timer(1000)
+        getMediaStatisticsTimer.addEventListener(TimerEvent.TIMER, checkMediaStatistics);
+        getMediaStatisticsTimer.start();
+        _lastLostFrames = 0;
+      }
+
+      private function enumerateAudioSources():Array
+      {
+        return Microphone.names;
+      }
+
+      private function enumerateVideoSources():Array
+      {
+        return Camera.names;
+      }
+
+      private function netStatusHandler(e:NetStatusEvent):void
+      {
+        do_trace("Publisher status: " + e.info.code);
+        try {
+        if (!STAGE && e.info.code == "NetStream.Play.Start") {
+            STAGE = this.stage;
+            stage.addEventListener(Event.RESIZE, resizeContainer);
+        }
+        } catch (e:Error) {
+            do_trace("Error:" + e.toString());
+        }
+        switch (e.info.code) {
+          case "NetStream.Video.DimensionChange":
+            var ratio:Number = _video.videoHeight / _video.videoWidth;
+            if (ratio == 0) {
+              ratio = 640.0 / 480.0;
+            }
+            _video.width = this.width;
+            _video.height = this.width * ratio;
+            if (_video.height > this.height) {
+              _video.height = this.height;
+              _video.width = this.height / ratio;
+            }
+            _video.y = (this.height - _video.height) / 2;
+            _video.x = (this.width - _video.width) / 2;
+
+            break;
+          default:
+            break;
+        }
+
+      }
+
+      private function asyncErrorHandler(e:AsyncErrorEvent):void
+      {
+        do_trace("asyncErrorHandler: " + e.toString() + e.currentTarget);
+      }
+
+      private function ioErrorHandler(e:IOErrorEvent):void
+      {
+        do_trace("ioErrorHandler: " + e);
+      }
+
+      private function toggleMuteVideo():Boolean
+      {
+        if (_showingVideo) {
+          _showingVideo = false;
+          _outgoingStream.attachCamera(null);
+        }
+        else {
+          _showingVideo = true;
+          _outgoingStream.attachCamera(_camera);
+        }
+        return !_showingVideo;
+      }
+
+      private function toggleMuteAudio():Boolean
+      {
+        if (_showingAudio) {
+          _showingAudio = false;
+          _outgoingTransform.volume = 0;
+          // Workaround for SPEEX ignoring soundtransform
+          _microphone.codec = SoundCodec.NELLYMOSER;
+
+        }
+        else {
+          _showingAudio = true;
+          _microphone.codec = SoundCodec.SPEEX;
+          _outgoingTransform.volume = 1;
+        }
+        return !_showingAudio;
+      }
+
+      private function onCameraStatusChanged(e:StatusEvent):void
+      {
+        if (_camera.muted) {
+          callFunctionInAngular("camera_failed");
+        }
+      }
+      private function onMicrophoneStatusChanged(e:StatusEvent):void
+      {
+        do_trace("MICROPHONE STATUS CHANGED : " + e.code);
+        if (_microphone.muted) {
+          callFunctionInAngular("camera_failed");
+          return;
+        }
+        _microphone.codec = SoundCodec.SPEEX;
+        _microphone.setLoopBack(false);
+        _microphone.setSilenceLevel(0);
+        _microphone.encodeQuality = 10;
+        _microphone.framesPerPacket = 1;
+      }
+
+
+      private function outgoingConnectionError(e:AsyncErrorEvent):void
+      {
+        do_trace("ASYNC ERROR: " + e.toString());
+      }
+
+      private function outgoingConnectionHandler(e:NetStatusEvent):void
+      {
+        do_trace("Outgoing Connection status: " + e.info.code);
+        if ("NetConnection.Connect.Failed" == e.info.code)
+        {
+          callFunctionInAngular("call_failed");
+          _incomingNetConnection.close();
+        }
+        if ("NetConnection.Connect.Closed" == e.info.code)
+        {
+          callFunctionInAngular("call_ended");
+          _incomingNetConnection.close();
+        }
+
+        if ("NetConnection.Connect.Success" == e.info.code)
+        {
+          _outgoingStream = new NetStream(_outgoingNetConnection);
+          _outgoingStream.bufferTimeMax = 0.8;
+          _outgoingTransform = new SoundTransform(1);
+          _outgoingStream.soundTransform = _outgoingTransform;
+          _outgoingStream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
+          _outgoingStream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, asyncErrorHandler);
+
+          if (_audio_source == false) {
+            _microphone = Microphone.getMicrophone();
+          }
+          else {
+            _microphone = Microphone.getMicrophone(_audio_source);
+          }
+          _microphone.soundTransform = _outgoingTransform
+          _microphone.addEventListener(
+            StatusEvent.STATUS, onMicrophoneStatusChanged);
+          this.addEventListener("SRAudioAllowed", onMicrophoneStatusChanged, false, 0, true);
+
+          _microphone.codec = SoundCodec.SPEEX;
+          _microphone.setUseEchoSuppression(true);
+          _microphone.setLoopBack(false);
+          _microphone.setSilenceLevel(0);
+          _microphone.encodeQuality = 10;
+          _microphone.framesPerPacket = 1;
+          //_microphone.noiseSuppressionLevel = 0;
+          _microphone.gain = 50;
+
+          var h264Settings:H264VideoStreamSettings = new H264VideoStreamSettings();
+          h264Settings.setProfileLevel(H264Profile.BASELINE, H264Level.LEVEL_3_1);
+
+          if (_video_source == false) {
+            _camera = Camera.getCamera();
+          }
+          else {
+            _camera = Camera.getCamera(_video_source);
+          }
+          _camera.addEventListener(StatusEvent.STATUS, onCameraStatusChanged)
+          if (!_camera)
+          {
+            do_trace("ERROR: No camera connected");
+          }
+          _camera.setQuality(_bandwidth * 1000 / 8, 0);
+          if (_bandwidth > 1000){
+            _camera.setMode(768, 448, 30, false);
+          } else {
+            _camera.setMode(640, 480, 30, false);
+          }
+
+          _camera.setKeyFrameInterval(48);
+
+          _showingVideo = true;
+          _showingAudio = true;
+
+          do_trace("Outgoing Peer stream connecting to MCU");
+                    _outgoingStream.attachCamera(_camera);
+                    _outgoingStream.attachAudio(_microphone);
+
+
+          var c:Object = new Object();
+
+          c.onPeerConnect = function(n:NetStream):Boolean
+          {
+            do_trace("Peer stream connected to MCU");
+            return true;
+          }
+          _outgoingStream.client = c;
+
+          _outgoingStream.videoStreamSettings = h264Settings;
+                    _outgoingStream.publish(_uuid + "-send");
+          do_trace("PUBLISHING " + _uuid + "-send");
+
+          var metaData:Object = new Object();
+          metaData.codec = _outgoingStream.videoStreamSettings.codec;
+          metaData.profile =  h264Settings.profile;
+          metaData.level = h264Settings.level;
+          metaData.fps = _camera.fps;
+          metaData.bandwith = _camera.bandwidth;
+          metaData.height = _camera.height;
+          metaData.width = _camera.width;
+          metaData.keyFrameInterval = _camera.keyFrameInterval;
+                    metaData.videocodecid = 7;
+
+          _outgoingStream.send( "@setDataFrame", "onMetaData", metaData);
+                    play();
+        }
+      }
+
+      private function publish():void
+      {
+        do_trace("Peer stream connected to MCU");
+        _outgoingNetConnection = new NetConnection();
+        _outgoingNetConnection.addEventListener(AsyncErrorEvent.ASYNC_ERROR, outgoingConnectionError);
+        _outgoingNetConnection.addEventListener(NetStatusEvent.NET_STATUS, outgoingConnectionHandler);
+
+                _outgoingNetConnection.connect(_rtmpServerAddress);
+      }
+
+      private function incomingConnectionHandler(e:NetStatusEvent):void
+      {
+        do_trace("Incoming Connection status: " + e.info.code);
+        if ("NetConnection.Connect.Success" == e.info.code)
+        {
+          _incomingStream = new NetStream(_incomingNetConnection);
+
+          _incomingStream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
+          _incomingStream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, asyncErrorHandler);
+          _incomingStream.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+
+          //_incomingStream.receiveVideoFPS(30);
+
+          var ss:flash.media.VideoStreamSettings = new flash.media.H264VideoStreamSettings();
+          ss.setMode(640, 480, 30);
+          ss.setQuality(_bandwidth * 1000, 0);
+          flash.media.H264VideoStreamSettings(ss).setProfileLevel(flash.media.H264Profile.BASELINE, flash.media.H264Level.LEVEL_3_1);
+          _incomingStream.videoStreamSettings = ss;
+
+          var c:Object = new Object();
+          c.onPlayStatus = function(infoObject:Object):void
+          {
+            do_trace("PlayStatus: " + infoObject.toString());
+          }
+
+          c.onMetaData = function(infoObject:Object):void
+          {
+            do_trace("Metadata: " + infoObject.toString());
+            _incoming_height = infoObject.height;
+            _incoming_width = infoObject.width;
+            infoObject.stageWidth = infoObject.width;
+            infoObject.stageHeight = infoObject.height;
+            resizeContainer(null);
+          }
+          _incomingStream.client = c;
+
+          _incomingStream.play(_uuid + "-recv");
+          //_incomingStream.play("PEXIPMCURECV");
+          do_trace("PLAYING " + _uuid + "-recv");
+
+          _video = new Video(this.width, this.height);
+          _video.smoothing = true;
+          _video.attachNetStream(_incomingStream);
+          remoteVideoDisplay.addChild(_video);
+          showSelfview();
+          do_trace("Attached incoming video to remote video");
+        }
+      }
+
+            private function resizeContainer(e:Event):void
+            {
+                var videoHeight:int = _video.videoHeight;
+                var videoWidth:int = _video.videoWidth;
+                if (videoHeight == 0 && videoWidth == 0){
+                  videoHeight = 448;
+                  videoWidth = 768;
+                }
+                do_trace("stageWidth: " + stage.stageWidth + " stageHeight: " + stage.stageHeight);
+                do_trace("videoheight: " + _video.videoHeight+ " width: " + _video.videoWidth);
+
+                _video.width = stage.stageWidth;
+                _video.height = _video.width * videoHeight / videoWidth;
+                if (_video.height > this.height) {
+                  _video.height = this.height;
+                  _video.width = this.height * videoWidth / videoHeight;
+                }
+
+                _video.y = (stage.stageHeight - _video.height) / 2;
+                _video.x = (stage.stageWidth - _video.width) / 2;
+                if (_selfview && _camera) {
+                  var ratio:Number = _camera.height / _camera.width;
+                  if (ratio == 0) {
+                    ratio = 640.0 / 480.0;
+                  }
+                  _selfview.width = stage.stageWidth * _selfviewScale;
+                  _selfview.height = stage.stageWidth * _selfviewScale * ratio;
+                  _selfview.y = 5;
+                  _selfview.x = this.width - _selfview.width - 5;
+                }
+            }
+
+      private function play():void
+      {
+        _incomingNetConnection = new NetConnection();
+        _incomingNetConnection.addEventListener(NetStatusEvent.NET_STATUS, incomingConnectionHandler);
+                _incomingNetConnection.connect(_rtmpServerAddress);
+      }
+
+      private function both(rtmp_url:String, uuid:String, displayName:String, bandwidth:Number, audio_source:int, video_source:String):void
+      {
+        do_trace("GOT UUID: " + _rtmpServerAddress);
+        _rtmpServerAddress = rtmp_url;
+        _uuid = uuid;
+        _displayName = displayName;
+        _bandwidth = bandwidth;
+        _audio_source = audio_source;
+        _video_source = video_source;
+        _lastDownspeed = new Date();
+        publish();
+      }
+
+      private function getMediaStatistics():Dictionary
+      {
+        return _getMediaStatistics(null);
+      }
+
+      private function checkMediaStatistics(event:TimerEvent):void
+      {
+        var mediaStats:Dictionary = getMediaStatistics();
+        if ("Outgoing" in mediaStats &&
+            "Level" in mediaStats["Outgoing"]["Audio"] &&
+            mediaStats["Outgoing"]["Audio"]["Level"] > 15 &&
+            !_showingAudio)
+        {
+          callFunctionInAngular("mic_activity");
+
+        }
+        if ("Outgoing" in mediaStats &&
+            "Framerate" in mediaStats["Outgoing"]["Video"] &&
+            "Packets_lost" in mediaStats["Outgoing"]["Video"] &&
+            _showingVideo)
+        {
+          var framesLostPerSecond:int = mediaStats["Outgoing"]["Video"]["Packets_lost"] - _lastLostFrames;
+          _lastLostFrames = mediaStats["Outgoing"]["Video"]["Packets_lost"];
+          var framerate:int = mediaStats["Outgoing"]["Video"]["Framerate"];
+
+          if (framerate == 0)
+          {
+            framerate = 0.01;
+          }
+          var framesLostPercent:Number = 100 * framesLostPerSecond / framerate;
+          if (mediaStats["Outgoing"]["Video"]["Framerate"] < 5 || framesLostPercent > 20) {
+            var now:Date = new Date();
+            // Downspeed max once per 10 seconds
+            if (_bandwidth > 399 && now.valueOf() - _lastDownspeed.valueOf() > 10 * 1000) {
+              _lastDownspeed = now
+              do_trace("Flash Downspeeding to " + (_bandwidth - 200));
+              downSpeed(_bandwidth - 200);
+            }
+          }
+        }
+      }
+
+      private function _getMediaStatistics(event:TimerEvent):Dictionary
+      {
+        var debugObj:Dictionary = new Dictionary();
+
+        if (_incomingStream) {
+          debugObj["Incoming"] = new Dictionary();
+          debugObj["Incoming"]["Video"] = new Dictionary()
+          debugObj["Incoming"]["Audio"] = new Dictionary()
+          debugObj["Incoming"]["Video"]["Framerate"] = int(_incomingStream.currentFPS);
+          debugObj["Incoming"]["Video"]["Dropped_Frames"] = _incomingStream.info.droppedFrames;
+          debugObj["Incoming"]["Video"]["Packet_loss"] = "" + (_incomingStream.info.videoLossRate * 100).toFixed(1) + "%";
+          debugObj["Incoming"]["Audio"]["Bitrate"] = "" + (8*_incomingStream.info.audioBytesPerSecond/1000).toFixed(1) + " kbps";
+          debugObj["Incoming"]["Audio"]["Latency"] = "" + _incomingStream.liveDelay + " s";
+          debugObj["Incoming"]["Video"]["Bitrate"] = "" + (8*_incomingStream.info.videoBytesPerSecond/1000).toFixed(1) + " kbps";
+          debugObj["Incoming"]["Video"]["Buffer_Length"] = _incomingStream.info.videoBufferLength;
+          debugObj["Incoming"]["Audio"]["Buffer_Length"] = _incomingStream.info.audioBufferLength;
+          debugObj["Incoming"]["Audio"]["Packet_loss"] = "" + (_incomingStream.info.audioLossRate * 100).toFixed(1) + "%";
+          debugObj["Incoming"]["Video"]["Resolution"] = "" + _video.videoWidth + "x" + _video.videoHeight;
+
+          // debugObj["Incoming"]["liveDelay"] = _incomingStream.liveDelay;
+          // debugObj["Incoming"]["objectEncoding"] = _incomingStream.objectEncoding;
+          // debugObj["Incoming"]["time"] = _incomingStream.time;
+        }
+
+        if (_outgoingStream) {
+          debugObj["Outgoing"] = new Dictionary();
+          debugObj["Outgoing"]["Video"] = new Dictionary()
+          debugObj["Outgoing"]["Audio"] = new Dictionary()
+
+          debugObj["Outgoing"]["Video"]["Framerate"] = int(_outgoingStream.currentFPS);
+          debugObj["Outgoing"]["Video"]["Packets_lost"] = _outgoingStream.info.droppedFrames;
+          debugObj["Outgoing"]["Video"]["Buffer_Length"] = _outgoingStream.info.videoBufferLength;
+          debugObj["Outgoing"]["Video"]["Bandwidth"] = "" + (8*_outgoingStream.info.videoBytesPerSecond/1000).toFixed(2) + " kbps";
+          debugObj["Outgoing"]["Video"]["Resolution"] = "" + _camera.width + "x" + _camera.height;
+
+          debugObj["Outgoing"]["Audio"]["Latency"] = "" + _outgoingStream.liveDelay+ " s";
+          debugObj["Outgoing"]["Audio"]["Bandwidth"] = "" + (8*_outgoingStream.info.audioBytesPerSecond/1000).toFixed(2) + " kbps";
+          debugObj["Outgoing"]["Audio"]["Buffer_Length"] = _outgoingStream.info.audioBufferLength;
+          if (_camera) {
+          }
+          if (_microphone) {
+            debugObj["Outgoing"]["Audio"]["Level"] = _microphone.activityLevel;
+          }
+        }
+
+        // if (_camera) {
+        //   debugObj["camera"] = new Dictionary();
+        //   debugObj["camera"]["activityLevel"] = _camera.activityLevel;
+        //   debugObj["camera"]["currentFPS"] = _camera.currentFPS;
+        //   debugObj["camera"]["fps"] = _camera.fps;
+        //   debugObj["camera"]["keyFrameInterval"] = _camera.keyFrameInterval;
+        //   debugObj["camera"]["loopback"] = _camera.loopback;
+        //   debugObj["camera"]["motionLevel"] = _camera.motionLevel;
+        //   debugObj["camera"]["motionTimeout"] = _camera.motionTimeout;
+        //   debugObj["camera"]["quality"] = _camera.quality;
+        // }
+        return debugObj;
+      }
+
+
+    ]]>
+  </fx:Script>
+  <fx:Style>
+    @namespace s "library://ns.adobe.com/flex/spark";
+    @namespace mx "library://ns.adobe.com/flex/mx";
+
+    .buttonStyle
+    {
+      color: "0x000000";
+      textRollOverColor: "0x000000";
+      textSelectedColor: "0x000000";
+    }
+
+    .checkboxStyle
+    {
+      color: "0xffffff";
+      textRollOverColor: "0xffffff";
+      textSelectedColor: "0xffffff";
+    }
+
+    .textStyle
+    {
+      color: "0x00ff00";
+    }
+  </fx:Style>
+
+  <fx:Declarations>
+  </fx:Declarations>
+
+
+
+
+  <mx:VideoDisplay width="100%" height="100%" id="remoteVideoDisplay" />
+  <mx:Text styleName="textStyle" id="debugLabel" text="" />
+
+
+</s:Application>

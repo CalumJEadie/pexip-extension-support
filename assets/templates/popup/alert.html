@@ -1,0 +1,119 @@
+<div class="popup__wrapper" ng-class="{ popup__toast__wrapper: popupType==='toast', overlay: popupType==='confirm' }">
+
+    <div ng-if="popupType==='toast'"
+    class="popup"
+    ng-class="{
+    popup__alert: popupType==='alert',
+    popup__alert: popupType==='mediaStatistics',
+    popup__toast: popupType==='toast',
+    popup__confirm: popupType==='confirm',
+    popup__prompt: popupType==='prompt' }"
+    ng-mouseover="mouseOver();"
+    ng-mouseleave="mouseLeave();"
+    ng-style="{ top: toastTop + 'em', 'z-index': 10 }">
+
+        <div class="popup__message">
+            <span ng-bind="message"></span>
+
+            <div ng-show="required" class="form__alert">{{ 'FIELD_REQUIRED' | translate }}</div>
+        </div>
+    </div>
+
+    <div ng-if="popupType!=='toast'&&popupType!=='mediaStatistics'"
+    class="popup"
+    ng-class="{
+    popup__alert: popupType==='alert',
+    popup__toast: popupType==='toast',
+    popup__confirm: popupType==='confirm',
+    popup__prompt: popupType==='prompt' }"
+    ng-mouseover="mouseOver();"
+    ng-mouseleave="mouseLeave();"   >
+        <div class="popup__message">
+            <span ng-bind="message"></span>
+
+            <div class="popup__checkbox" ng-show="options.rememberSetting">
+                <label class="form__inline__label">
+                    <input type="checkbox" id="user-screen-field1" ng-model="dataCheckbox" ng-true-value="save" value="save" role="checkbox" tabindex="1" aria-checked="{{ dataCheckbox === 'save' }}" aria-labelledby="user-screen-field1" class="ng-pristine ng-valid">
+                    <span translate="" class="ng-scope">{{ 'DONT_ASK_AGAIN' | translate }}</span>
+                </label>
+            </div>
+
+            <div ng-show="required" class="form__alert">{{ 'FIELD_REQUIRED' | translate }}</div>
+        </div>
+
+
+        <div class="presentHD popup__checkbox" ng-show="options.hd">
+            <label class="form__inline__label">
+                <input type="checkbox" id="user-screen-field1" ng-model="dataCheckbox" ng-true-value="mssip" value="screen" role="checkbox" tabindex="1" aria-checked="false" aria-labelledby="user-screen-field1" class="ng-pristine ng-valid">
+                <span translate="" class="ng-scope">View HD presentation</span>
+            </label>
+        </div>
+
+        <!-- put an input if it's a prompt -->
+        <input type="input" class="popup__input" ng-model="data" ng-keyup="keyUp($event, data, dataCheckbox);" ng-show="popupType==='prompt'" />
+
+        <div class="popup__radio" ng-show="options.protocol">
+            <label class="form__inline__label">
+                <input type="radio" id="user-screen-field1" ng-model="dataCheckbox" value="sip" role="radio" tabindex="1" aria-checked="{{ dataCheckbox === 'sip' }}" aria-labelledby="user-screen-field1" class="ng-pristine ng-valid" name="protocol" checked>
+                <span translate="" class="ng-scope">SIP</span>
+            </label>
+
+            <label class="form__inline__label">
+                <input type="radio" id="user-screen-field2" ng-model="dataCheckbox" value="h323" role="radio" tabindex="1" aria-checked="{{ dataCheckbox === 'h323' }}" aria-labelledby="user-screen-field2" class="ng-pristine ng-valid" name="protocol">
+                <span translate="" class="ng-scope">H.323</span>
+            </label>
+
+            <label class="form__inline__label">
+                <input type="radio" id="user-screen-field3" ng-model="dataCheckbox" value="lync" role="radio" tabindex="1" aria-checked="{{ dataCheckbox === 'lync' }}" aria-labelledby="user-screen-field3" class="ng-pristine ng-valid" name="protocol">
+                <span translate="" class="ng-scope">Lync</span>
+            </label>
+        </div>
+
+        <div class="popup__controls">
+            <span ng-repeat="button in buttons">
+                <button class="button " ng-click="clickButton(button, data, dataCheckbox);" ng-class="{ button__ok: button.class==='ok', button__cancel: button.class==='cancel' }"><span ng-bind="button.label"></span></button>
+            </span>
+        </div>
+    </div>
+
+    <div ng-if="popupType==='mediaStatistics'"
+    class="popup popup__alert"
+    ng-mouseover="mouseOver();"
+    ng-mouseleave="mouseLeave();">
+        <div class="popup__message">
+            <span>
+            <table width='640px'>
+                <tr>
+                  <td ng-repeat="(direction, mediatype_data) in message"
+                      style='text-align: center; padding-right: 10px;'>
+                    <h2>{{direction}}</h2>
+                  <td>
+                </tr>
+                <tr>
+                  <td ng-repeat="(direction, mediatype_data) in message"
+                      valign="top"
+                      style='text-align: center; padding-right: 10px;'>
+                    <div ng-repeat="(mediatype, stats) in mediatype_data">
+                        <h3>{{mediatype}}</h3>
+                        <table width='90%'>
+                            <tr ng-repeat="(key, value) in stats">
+                                <td style='text-align:left;'>{{key|keyHumanReadable}}</td>
+                                <td style='text-align:right;'>{{value}}</td>
+                            </tr>
+                        </table>
+                    <div>
+                  </td>
+                </tr>
+            </table>
+        </span>
+        </div>
+        <!-- put an input if it's a prompt -->
+        <input type="input" class="popup__input" ng-model="data" ng-keyup="keyUp($event);" ng-show="popupType==='prompt'" />
+
+        <div class="popup__controls">
+            <span ng-repeat="button in buttons">
+                <button class="button " ng-click="clickButton(button, data);" ng-class="{ button__ok: button.class==='ok', button__cancel: button.class==='cancel' }"><span ng-bind="button.label"></span></button>
+            </span>
+        </div>
+    </div>
+</div>

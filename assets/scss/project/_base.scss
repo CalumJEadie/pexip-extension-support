@@ -1,0 +1,18 @@
+html {
+  background: $color-background url(../images/list-background.png);
+  height: 100%;
+}
+
+body {
+  @extend %sans-serif-regular;
+  color: $color-text;
+  height: 100%;
+}
+
+.app {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}

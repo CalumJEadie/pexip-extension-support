@@ -1,0 +1,43 @@
+.flex {
+
+  &__container {
+    @include flexbox();
+
+    flex-direction: row;
+    max-height: 100vh;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  &__sidebar {
+    @include user-select(none);
+
+    background: $color-white-off;
+    margin: 0;
+    position: relative;
+    -webkit-transition: width ease-out .3s;
+    transition: width ease-out .3s;
+    width: 20rem;
+    z-index: 1000;
+
+    &.collapse {
+      border-right: 3px solid $color-brand;
+      overflow: hidden;
+      width: 0;
+    }
+
+    &.expand {
+      width: 20rem;
+    }
+  }
+
+  &__main {
+    @include flex(1);
+    @include user-select(none);
+
+    background: $color-black-almost;
+    margin: 0;
+    position: relative;
+  }
+
+}

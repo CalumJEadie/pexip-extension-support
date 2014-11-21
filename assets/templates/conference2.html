@@ -1,0 +1,167 @@
+<div ng-click="menu.close()" resizable>
+<div class="screen-controls">
+  <button title="{{ 'CONFERENCE_ROSTER' | translate }}" class="videoToggle icon icon__show-roster" ng-show="windowWidth <= 800" ng-click="controls.showSideBarClick();"><span class="icon__label">{{ 'CONFERENCE_ROSTER' | translate }}</span></button>
+</div>
+
+<aside class="sidebar" ng-class="{'has-selfview': selfview.active, collapse: selfview.collapse }">
+  <div class="topbar">
+    <h1 class="conference" ng-click="menu.open('settings', $event)">{{conference.id}}</h1>
+    <div class="settings">
+
+      <button title="Menu" class="icon icon__menu" ng-click="menu.open('settings', $event)"><span class="icon__label">{{ 'CONFERENCE_MENU' | translate }}</span></button>
+
+      <ul ng-show="menu.isOpen('settings')" class="settings__menu" id="settings">
+        <li ng-show="presentation.active && presentation.enableVideoPresentation && presentation.showImage"><a href="" ng-click="presentation.elevateToVideo();">View HD presentation</a></li>
+        <li ng-show="menu.showLanguage"><a href="" ng-click="controls.language.en()">English mode</a></li>
+        <li ng-show="menu.showLanguage"><a href="" ng-click="controls.language.debug()">Debug mode</a></li>
+
+        <li><a href="" ng-show="user.isHost()" ng-click="participant.add()">{{ 'CONFERENCE_ADD_A_NEW_PARTICIPANT' | translate }}</a></li>
+        <li><a href="" ng-click="controls.versionOverlay()">{{ 'CONFERENCE_ABOUT_THIS_APP' | translate }}</a></li>
+      </ul>
+
+      <button title="View Video" class="videoToggle icon icon__show-video" ng-show="windowWidth <= 800" ng-click="controls.showSideBarClick();"><span class="icon__label">{{ 'CONFERENCE_VIDEO' | translate }}</span></button>
+
+      <button title="Disconnect" class="icon icon__disconnect" ng-click="controls.disconnect('./')"><span class="icon__label">{{ 'CONFERENCE_DISCONNECT' | translate }}</span></button>
+
+    </div>
+  </div>
+
+
+  <div ng-hide="conference.isGateway">
+    <div class="participantsbar">
+      <input type="search" ng-model="search" placeholder="{{ 'CONFERENCE_SEARCH_PARTICIPANTS' | translate }}" />
+      <i class="icon icon__search"></i>
+
+    </div>
+    <div class="participants">
+      <ul>
+        <li class="participant" ng-repeat="p in participants | filter: {name: search} | orderBy:'connection_duration':false">
+          <div class="participant__name">{{p.name}}</a>
+            <div class="participant__role">
+              {{p.role}}
+              <span ng-show="p.is_muted">{{ 'CONFERENCE_MUTED' | translate }}</span>
+              <span ng-show="p.is_presenting">{{ 'CONFERENCE_PRESENTING' | translate }}</span>
+            </div>
+            <a ng-show="user.isHost()" class="participant__menuToggle icon icon__menu-toggle" href="" ng-click="menu.open('participant__' + p.uuid, $event)"><span class="icon__label">{{ 'CONFERENCE_OPTIONS' | translate }}</span></a>
+            <ul ng-show="menu.isOpen('participant__' + p.uuid)" class="settings__menu participant__menu">
+              <li>
+                <a href="" ng-click="participant.mute(p)">
+                  <span ng-show="!p.is_muted">{{ 'CONFERENCE_MUTE_PARTICIPANT' | translate }}</span>
+                  <span ng-show="p.is_muted">{{ 'CONFERENCE_UNMUTE_PARTICIPANT' | translate }}</span>
+                </a>
+              </li>
+              <li><a href="" ng-click="participant.disconnect(p)">{{ 'CONFERENCE_DISCONNECT_PARTICIPANT' | translate }}</a></li>
+            </ul>
+        </li>
+      </ul>
+      </div>
+    </div>
+
+    <div class="sidebar__message" ng-show="conference.isGateway">
+      <p>{{ 'CONFERENCE_DIRECT_CALL_UNAVAILABLE_ROSTER_LIST' | translate }}</p>
+    </div>
+
+    <div class="selfview" ng-class="{visible: selfview.active}" ng-click="selfview.hide()">
+      <figure>
+        <video width="100%" id="selfview" muted="true" autoplay="autoplay" poster="assets/images/spinner.gif" />
+      </figure>
+    </div>
+</aside>
+
+<div class="screen">
+
+
+
+
+  <figure
+    class="stage stage__main video"
+    ng-class="{
+      'stage--max': !presentation.maximised,
+      'stage--min': presentation.maximised,
+      'presentation--active': presentation.active,
+      'presentation--inactive': !presentation.active }">
+    <video
+      class="video centered stage__child"
+      width="100%"
+      id="video"
+      autoplay="autoplay"
+      poster="assets/images/spinner.gif"
+      ng-click="presentation.toggleView('video');"
+      ng-class="{ 'active': presentation.maximised, 'inactive': !presentation.maximised }" />
+  </figure>
+
+
+
+  <figure
+    class="presentation video"
+    ng-show="presentation.active"
+    ng-class="{ 'presentation--max': presentation.maximised, 'presentation--min': !presentation.maximised, 'centered': presentation.maximised }">
+
+    <img
+      class="presentation__image presentation__child centered"
+      ng-click="presentation.toggleView('presentation');"
+      ng-show="presentation.showImage"
+      ng-src="{{ presentation.imageSrc }}"
+      ng-class="{ 'active': !presentation.maximised, 'inactive': presentation.maximised }"
+      poster="assets/images/spinner.gif" />
+    <video
+      class="presentation__video presentation__child centered"
+      width="100%"
+      ng-show="!presentation.showImage"
+      ng-click="presentation.toggleView('presentation');"
+      id="presentation"
+      autoplay="autoplay"
+      poster="assets/images/spinner.gif"
+      ng-class="{ 'active': !presentation.maximised, 'inactive': presentation.maximised }" />
+  </figure>
+
+
+  <nav ng-hide="user.screenValue()" class="screenbar" ng-class="{'presentation__screenbar': presentation.active}" role="navigation">
+    <ul class="grid--full">
+      <li class="grid__item one-third lap-one-half palm-one-whole">
+        <a class="selfview-icon" ng-class="{inactive: selfview.active == false}" href="" ng-click="selfview.toggle()">
+          <span ng-show="selfview.active"><i class="icon icon__hide-selfview"></i> {{ 'CONFERENCE_HIDE_SELFVIEW' | translate }}</span>
+          <span ng-show="!selfview.active"><i class="icon icon__show-selfview"></i> {{ 'CONFERENCE_SHOW_SELFVIEW' | translate }}</span>
+        </a>
+      </li><!--
+   --><li class="grid__item one-third lap-one-half palm-one-whole">
+        <a class="audio-icon" ng-class="{inactive: audio.active == false}" href="" ng-click="audio.toggle()">
+          <span ng-show="audio.active"><i class="icon icon__mute-my-audio"></i> {{ 'CONFERENCE_MUTE_MY_AUDIO' | translate }}</span>
+          <span ng-show="!audio.active"><i class="icon icon__enable-my-audio"></i> {{ 'CONFERENCE_ENABLE_MY_AUDIO' | translate }}</span>
+        </a>
+      </li><!--
+      --><li class="grid__item one-third lap-one-half palm-one-whole">
+        <a class="video-icon" ng-class="{inactive: video.active == false}" href="" ng-click="video.toggle()">
+          <span ng-show="video.active"><i class="icon icon__hide-my-video"></i> {{ 'CONFERENCE_HIDE_MY_VIDEO' | translate }}</span>
+          <span ng-show="!video.active"><i class="icon icon__enable-my-video"></i> {{ 'CONFERENCE_ENABLE_MY_VIDEO' | translate }}</span>
+        </a>
+      </li><!--
+       --><li class="grid__item one-third lap-one-half palm-one-whole">
+        <a class="fullscreen-icon" ng-class="{inactive: fullscreen.active == false}" href="" ng-click="fullscreen.toggle()">
+          <span ng-show="fullscreen.active"><i class="icon icon__disable-fullscreen"></i> {{ 'CONFERENCE_DISABLE_FULLSCREEN' | translate }}</span>
+          <span ng-show="!fullscreen.active"><i class="icon icon__enable-fullscreen"></i> {{ 'CONFERENCE_ENABLE_FULLSCREEN' | translate }}</span>
+        </a>
+      </li><!--
+    --><li class="grid__item one-third lap-one-half palm-one-whole">
+        <a ng-class="screenshare.className()" class="screen-icon" href="" ng-click="screenshare.toggle()">
+           <span ng-show="screenshare.active"><i class="icon icon__stop-screen-sharing"></i> {{ 'CONFERENCE_STOP_SCREEN_SHARING' | translate }}</span>
+          <span ng-show="!screenshare.active"><i class="icon icon__present-screen"></i> {{ 'CONFERENCE_PRESENT_SCREEN' | translate }}</span>
+        </a>
+      </li><!--
+       --><li class="grid__item one-third lap-one-half palm-one-whole">
+        <a ng-show="!presentation.active" class="presentation-icon" ng-class="{disabled: presentation.available == false}" href="" ng-click="presentation.open()">
+          <span><i class="icon icon__view-presentation"></i> {{ 'CONFERENCE_VIEW_PRESENTATION' | translate }}</span>
+        </a>
+        <a ng-show="presentation.active" class="presentation-icon" href="" ng-click="presentation.close()">
+          <span><i class="icon icon__hide-presentation"></i> {{ 'CONFERENCE_HIDE_PRESENTATION' | translate }}</span>
+        </a>
+      </li>
+      <!--
+     -->
+    </ul>
+  </nav>
+</div>
+
+<!-- container to inject popups into the DOM -->
+<div popup-container items="popupList"></div>
+</div>

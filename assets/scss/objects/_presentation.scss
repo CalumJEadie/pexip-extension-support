@@ -1,0 +1,44 @@
+.presentation--min {
+  @extend %minimise;
+  @extend %transparent;
+  @extend %transition--opacity;
+  box-shadow: rgba($color-black,.1) 0 0 10px;
+  left: 0;
+  position: absolute;
+  top: 0;
+
+  .presentation__image,
+  .presentation__video {
+    background: $color-stage__background;
+    width: 100%;
+  }
+}
+
+.presentation--max {
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: z("default");
+
+  .presentation__image,
+  .presentation__video {
+    @extend %centered;
+    width: 100%;
+  }
+}
+
+.presentation__child {
+
+  &.active {
+    box-shadow: rgba($color-black,.1) 0 0 10px;
+    cursor: pointer;
+    z-index: z("always-on-top");
+  }
+}
+
+.presentation__video {
+  @extend %centered;
+}

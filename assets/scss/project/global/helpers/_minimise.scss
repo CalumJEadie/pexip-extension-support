@@ -1,0 +1,23 @@
+%minimise {
+  margin: 1em;
+  height: 15%;
+  width: 15%;
+  // z-index: 2;
+  z-index: z("minimise");
+
+  @include media-query(portable) {
+    z-index: z("minimisetablet");
+  }
+}
+
+%transparent {
+  opacity: 0.5;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+%transition--opacity {
+  transition: opacity 150ms;
+}

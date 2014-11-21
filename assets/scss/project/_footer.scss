@@ -1,0 +1,16 @@
+.footer {
+  max-width: 25em;
+  margin: 0 auto;
+  text-align: center;
+  font-size: .9em;
+
+  a {
+    color: $color-grey;
+    margin: 0 1em;
+    border-bottom: 1px solid $color-grey-light;
+
+    &:hover {
+      color: $color-black;
+    }
+  }
+}

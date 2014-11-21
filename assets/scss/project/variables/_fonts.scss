@@ -1,0 +1,13 @@
+$sans-serif-regular: "Fira regular", Helvetica, Arial, sans-serif;
+$sans-serif-light: "Fira Light", Helvetica, Arial, sans-serif;
+
+$base-font-family: $sans-serif-regular;
+$light-font-family: $sans-serif-regular;
+
+%sans-serif-regular {
+  font-family: $base-font-family;
+}
+
+%sans-serif-light {
+  font-family: $light-font-family;
+}

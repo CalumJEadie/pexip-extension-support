@@ -1,0 +1,60 @@
+.screenbar {
+  @include vendor(transition, opacity .3s);
+  bottom: 3em;
+  left: 0;
+  opacity: 0.1;
+  position: absolute;
+  right: 0;
+  // z-index: 5;
+  z-index: z("screenbar");
+
+  ul {
+    background: $color-black;
+    border-radius: 5px;
+    margin: 0 3em;
+    overflow: hidden;
+  }
+
+  a {
+    border-right: 1px solid $color-black-almost;
+    border-bottom: 1px solid $color-black-almost;
+    color: $color-white;
+    display: block;
+    font-size: .9em;
+    height: 3em;
+    line-height: 3em;
+    padding-left: 4em;
+    position: relative;
+
+    &.disabled,
+    &.disabled:hover {
+      color: $color-grey;
+    }
+
+    &:hover {
+      color: $color-white-off;
+    }
+
+    span {
+      @extend %sans-serif-light;
+      background: $color-black;
+      display: block;
+      height: 2.4em;
+    }
+
+  }
+
+  .icon {
+    color: $color-brand;
+    font-size: 1.5em;
+    left: 1em;
+    position: absolute;
+    top: 25%;
+  }
+
+  .disabled {
+    .icon {
+      color: $color-grey;
+    }
+  }
+}

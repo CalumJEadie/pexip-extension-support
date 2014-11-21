@@ -1,0 +1,9 @@
+%input-default {
+  @include font-size(1);
+  background: $color-white-off;
+  border: 2px solid transparent;
+  color: $color-text;
+  line-height: 1.5;
+  padding: .5em;
+  width: 100%;
+}

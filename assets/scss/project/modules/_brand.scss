@@ -1,0 +1,19 @@
+.brand {
+
+  &__logo {
+    background: transparent url(../images/logo.png) no-repeat left center;
+    height: 45px;
+    display: block;
+    width: 86px;
+
+    a {
+      display: block;
+      height: 100%;
+    }
+
+    &__label {
+      @extend %visuallyhidden;
+    }
+  }
+
+}

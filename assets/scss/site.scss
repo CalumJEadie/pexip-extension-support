@@ -1,0 +1,86 @@
+@charset "UTF-8";
+/*------------------------------------*\
+    STYLE.CSS
+\*------------------------------------*/
+/**
+ *
+ * sass --watch style.scss:style.min.css --style compressed
+ *
+ * Here we pull in some variables, include the inuit.css framework, then add our
+ * project-specific components afterwards.
+ */
+
+/**
+ * Setup
+ */
+@import "vars";
+@import "project/variables/colors";
+@import "project/variables/fonts";
+@import "project/variables/z-index";
+@import "inuit.css/inuit";
+
+/**
+ * She’s all yours, cap’n... Begin importing your stuff here.
+ */
+
+/**
+  * Placeholders
+  */
+@import "project/global/placeholders/container-plain";
+@import "project/global/placeholders/container-popup";
+@import "project/global/placeholders/focus";
+@import "project/global/placeholders/input-default";
+
+@import "project/base";
+@import "project/fonts";
+@import "project/links";
+@import "project/headings";
+@import "project/helpers";
+
+@import "project/topbar/topbar";
+@import "project/topbar/settings";
+@import "project/topbar/screen-controls";
+
+@import "project/settingsmenu";
+
+@import "project/sidebar/sidebar";
+@import "project/sidebar/participantsbar";
+@import "project/sidebar/participants";
+@import "project/sidebar/participant";
+@import "project/sidebar/selfview";
+
+@import "project/main";
+
+@import "project/screen/screen";
+@import "project/screen/video";
+@import "project/screen/screenbar";
+
+@import "project/form";
+@import "project/footer";
+
+/**
+ * Helpers
+ */
+@import "project/global/helpers/visually-hidden";
+@import "project/global/helpers/centered";
+@import "project/global/helpers/orange-border";
+@import "project/global/helpers/minimise";
+@import "project/global/helpers/unselectable";
+
+/**
+ * Modules
+ */
+@import "project/modules/loading";
+@import "project/modules/overlay";
+@import "project/modules/popup";
+@import "project/modules/buttons";
+@import "project/modules/icons";
+@import "project/modules/brand";
+
+/**
+ * Directives
+ */
+@import "project/modules/autocomplete";
+@import "project/modules/presentation";
+@import "project/modules/stage";
+@import "project/modules/key-pad";

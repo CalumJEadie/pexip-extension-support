@@ -1,0 +1,216 @@
+<div class="flex__container">
+
+  <div class="controls__independant controls__toggle">
+    <button title="{{ 'CONFERENCE_ROSTER' | translate }}" class="controls__item icon"
+      ng-click="controls.showSideBarClick();"
+      ng-class="{
+        'icon__roster-hide': selfview.collapse,
+        'icon__roster-show': !selfview.collapse,
+        'expand': !selfview.collapse,
+        'collapse': selfview.collapse }">
+      <span class="icon__label">{{ 'CONFERENCE_ROSTER' | translate }}</span>
+    </button>
+  </div>
+
+  <div class="flex__sidebar"
+    ng-class="{
+      'has-selfview': selfview.active,
+      'expand': !selfview.collapse,
+      'collapse': selfview.collapse }">
+
+    <div class="conference__details sidebar__item">
+
+      <span ng-show="conference.locked" class="conference__locked" ng-click="controls.unlockConference();">
+        <i class="icon icon__locked" title="{{ 'CONFERENCE_LOCKED' | translate }}"></i>
+        <span class="icon__label">{{ 'CONFERENCE_LOCKED' | translate }}</span>
+      </span>
+
+      <span ng-show="!conference.locked" class="conference__unlocked" ng-click="controls.lockConference();">
+        <i class="icon icon__unlocked" title="{{ 'CONFERENCE_UNLOCKED' | translate }}"></i>
+        <span class="icon__label">{{ 'CONFERENCE_UNLOCKED' | translate }}</span>
+      </span>
+
+      <h1 class="conference__heading" ng-click="menu.open('settings', $event)">
+        {{conference.id}}
+      </h1>
+
+      <a title="{{ 'CONFERENCE_ADD_A_NEW_PARTICIPANT' | translate }}" class="participant__add" href="" ng-show="user.isHost()" ng-click="participant.add()">
+        <i class="icon icon__participant-add"></i>
+        <span class="icon__label">{{ 'CONFERENCE_ADD_A_NEW_PARTICIPANT' | translate }}</span>
+      </a>
+
+    </div>
+
+    <div class="roster">
+
+      <div class="search__participants">
+        <input class="sidebar__item" type="search" ng-model="search" placeholder="{{ 'CONFERENCE_SEARCH_PARTICIPANTS' | translate }}" />
+        <i class="icon icon__search"></i>
+      </div>
+
+      <div class="filter">
+      </div>
+
+      <div class="roster__wrapper">
+        <ul class="roster__list">
+          <li class="roster__item participant" ng-repeat="p in participants | filter: {name: search} | orderBy:'connection_duration':false">
+            <div class="participant__name sidebar__item">
+              <i class="icon icon__buzz" title="{{ 'CONFERENCE_PARTICIPANT_BUZZ' | translate }}"></i>
+
+              <div class="participant__label">{{ p.name }}</div>
+
+              <div class="participant__controls">
+
+                <span class="participant__control participant__presenting participant__information" ng-click="controls.presentationEscalate();"  ng-show="p.is_presenting">
+                  <i class="icon icon__presenting" title="{{ 'CONFERENCE_PRESENTING_TOOLTIP' | translate }}"></i>
+                  <span class="icon__label">{{ 'CONFERENCE_PRESENTING_TOOLTIP' | translate }}</span>
+                </span>
+
+                <a class="participant__control participant__mute participant__action" href="" ng-click="participant.mute(p)" ng-show="user.isHost()">
+                  <span ng-show="!p.is_muted">
+                    <i class="icon icon__participant-mute" title="{{ 'CONFERENCE_MUTE_PARTICIPANT' | translate }}"></i>
+                    <span class="icon__label">{{ 'CONFERENCE_MUTE_PARTICIPANT' | translate }}</span>
+                  </span>
+                  <span ng-show="p.is_muted">
+                    <i class="icon icon__participant-enable" title="{{ 'CONFERENCE_UNMUTE_PARTICIPANT' | translate }}"></i>
+                    <span class="icon__label">{{ 'CONFERENCE_UNMUTE_PARTICIPANT' | translate }}</span>
+                  </span>
+                </a>
+
+                <a class="participant__control participant__disconnect participant__action" href="" ng-click="participant.disconnect(p)" ng-show="user.isHost()">
+                  <i class="icon icon__participant-disconnect" title="{{ 'CONFERENCE_DISCONNECT_PARTICIPANT' | translate }}"></i>
+                  <span class="icon__label">{{ 'CONFERENCE_DISCONNECT_PARTICIPANT' | translate }}</span>
+                </a>
+
+              </div>
+
+            </div>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="flex__main">
+    <div class="screen" toggle-hover="hover" toggle-overlaid="overlaid" wait="5000">
+
+      <div class="controls">
+
+        <nav ng-hide="user.screenValue()" class="screenbar" role="navigation"
+          ng-class="{
+            'presentation__screenbar': presentation.active}">
+          <a class="controls__item" href="" ng-click="selfview.toggle()" ng-class="{ 'inactive': selfview.active == false }">
+            <span ng-show="selfview.active">
+              <i class="icon icon__selfview-hide" title="{{ 'CONFERENCE_HIDE_SELFVIEW' | translate }}"></i>
+              <span class="icon__label">{{ 'CONFERENCE_HIDE_SELFVIEW' | translate }}</span>
+            </span>
+
+            <span ng-show="!selfview.active">
+              <i class="icon icon__selfview-show" title="{{ 'CONFERENCE_SHOW_SELFVIEW' | translate }}"></i>
+              <span class="icon__label">{{ 'CONFERENCE_SHOW_SELFVIEW' | translate }}</span>
+            </span>
+          </a>
+
+          <a class="controls__item" href="" ng-click="audio.toggle()" ng-class="{ 'inactive': audio.active == false }">
+            <span ng-show="audio.active">
+              <i class="icon icon__mic-mute" title="{{ 'CONFERENCE_MUTE_MY_AUDIO' | translate }}"></i>
+              <span class="icon__label">{{ 'CONFERENCE_MUTE_MY_AUDIO' | translate }}</span>
+            </span>
+
+            <span ng-show="!audio.active">
+              <i class="icon icon__mic-enable" title="{{ 'CONFERENCE_ENABLE_MY_AUDIO' | translate }}"></i>
+              <span class="icon__label">{{ 'CONFERENCE_ENABLE_MY_AUDIO' | translate }}</span>
+            </span>
+          </a>
+
+          <a class="controls__item" href="" ng-click="video.toggle()" ng-class="{ 'inactive': video.active == false }">
+            <span ng-show="video.active">
+              <i class="icon icon__video-hide" title="{{ 'CONFERENCE_HIDE_MY_VIDEO' | translate }}"></i>
+              <span class="icon__label">{{ 'CONFERENCE_HIDE_MY_VIDEO' | translate }}</span>
+            </span>
+
+            <span ng-show="!video.active">
+              <i class="icon icon__video-enable" title="{{ 'CONFERENCE_ENABLE_MY_VIDEO' | translate }}"></i>
+              <span class="icon__label">{{ 'CONFERENCE_ENABLE_MY_VIDEO' | translate }}</span>
+            </span>
+          </a>
+
+          <a class="controls__item" href="" ng-click="controls.versionOverlay()">
+            <i class="icon icon__about" title="{{ 'CONFERENCE_ABOUT_THIS_APP' | translate }}"></i>
+            <span class="icon__label">{{ 'CONFERENCE_ABOUT_THIS_APP' | translate }}</span>
+          </a>
+
+          <div class="controls__item controls__disconnect">
+            <button title="Disconnect" class="controls__item icon icon__disconnect" ng-click="controls.disconnect('../')">
+              <span class="icon__label">{{ 'CONFERENCE_DISCONNECT' | translate }}</span>
+            </button>
+          </div>
+
+        </nav>
+
+      </div>
+
+      <figure
+        class="stage stage__main video"
+        ng-class="{
+          'stage--max': !presentation.maximised,
+          'stage--min': presentation.maximised,
+          'presentation--active': presentation.active,
+          'presentation--inactive': !presentation.active }">
+
+          <div swf-object replace-id="flashContent" src="assets/flash/PexVideo.swf" width="100%" height="100%"></div>
+          <div id="flashContent">
+            <p>
+              To view this page ensure that Adobe Flash Player version 11.1.0 or greater is installed.
+            </p>
+            <!--
+              var pageHost = ((document.location.protocol == "https:") ? "https://" : "http://");
+              document.write("<a href='http://www.adobe.com/go/getflashplayer'><img src='"
+              + pageHost + "www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player' /></a>" );
+            -->
+          </div>
+      </figure>
+
+      <figure
+        class="presentation video"
+        ng-show="presentation.active"
+        ng-class="{
+          'presentation--max': presentation.maximised,
+          'presentation--min': !presentation.maximised,
+          'centered': presentation.maximised }">
+
+        <img
+          class="presentation__image presentation__child centered"
+          ng-click="presentation.toggleView('presentation');"
+          ng-show="presentation.showImage"
+          ng-src="{{ presentation.imageSrc }}"
+          ng-class="{
+            'active': !presentation.maximised,
+            'inactive': presentation.maximised }"
+          poster="assets/images/spinner.gif" />
+        <video
+          class="presentation__video presentation__child centered"
+          width="100%"
+          ng-show="!presentation.showImage"
+          ng-click="presentation.toggleView('presentation');"
+          id="presentation"
+          autoplay="autoplay"
+          poster="assets/images/spinner.gif"
+          ng-class="{
+            'active': !presentation.maximised,
+            'inactive': presentation.maximised }" />
+      </figure>
+
+    </div>
+
+  </div>
+
+  <div popup-container items="popupList"></div>
+  <div popup-container items="dialogList"></div>
+
+</div>
+
+<div class="disconnect"></div>

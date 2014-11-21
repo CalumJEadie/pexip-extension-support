@@ -1,0 +1,86 @@
+.controls {
+  opacity: 0.1;
+  position: relative;
+  text-align: center;
+  z-index: z("screenbar");
+
+  nav {
+    background: rgba($color-black, .25);
+    box-shadow: rgba($color-black,.1) 0 0 10px;
+    display: inline-block;
+    margin: 0 auto;
+    -webkit-transition: opacity 0.3s;
+    transition: opacity 0.3s;
+
+    &:hover {
+      background: rgba($color-black, .75);
+    }
+  }
+
+  &__item {
+    display: inline-block;
+    vertical-align: top;
+
+    .icon {
+      display: block;
+      padding: .5em;
+
+      &:hover {
+        background: rgba($color-white, .15);
+      }
+    }
+  }
+
+  &__independant {
+
+    .controls__item {
+      background: rgba($color-black, .25);
+      display: block;
+      height: auto;
+      padding: .5em;
+      position: fixed;
+      top: 0;
+      width: auto;
+      z-index: z("always-on-top");
+
+      &:hover {
+        background: rgba($color-black, .75);
+        outline: none;
+      }
+    }
+
+    button {
+      outline: none;
+    }
+  }
+
+  &__toggle {
+
+    .controls__item {
+      left: 20rem;
+      top: 50%;
+      -webkit-transition: left ease-out .3s;
+      transition: left ease-out .3s;
+    }
+
+    .collapse {
+      background-color: $color-brand;
+      left: 0;
+
+      &:hover {
+        background-color: $color-brand;
+      }
+    }
+
+    .expand {
+      left: 20rem;
+    }
+  }
+
+  &__disconnect {
+
+    .controls__item {
+      right: 0;
+    }
+  }
+}

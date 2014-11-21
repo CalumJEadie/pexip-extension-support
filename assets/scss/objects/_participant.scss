@@ -1,0 +1,108 @@
+.participant__name {
+  @include user-select(text);
+  color: $color-participant__name;
+  font-weight: fw("regular");
+  position: relative;
+
+  .icon__buzz {
+    left: .75em;
+    position: absolute;
+  }
+}
+
+.participant__label {
+  display: block;
+  max-width: 85%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.participant__role {
+  @extend %sans-serif-light;
+  color: $color-grey;
+  padding-top: .5em;
+}
+
+.participant__name,
+.participant__role {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.participant__menu {
+  left: auto;
+  right: 1em;
+  z-index: z("participant");
+
+  &:after {
+    left: auto;
+    right: 1.2em;
+  }
+}
+
+.participant__menuToggle.icon {
+  color: $color-participant__name;
+  height: 2em;
+  position: absolute;
+  right: 1.1em;
+  text-align: center;
+  top: 25%;
+  width: 2em;
+
+  &.fa {
+    @include font-size(1);
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.participant__add {
+  position: absolute;
+  right: .5em;
+  top: 0;
+}
+
+.participant__controls {
+  position: absolute;
+  right: .5em;
+  top: .5em;
+}
+
+.participant__control {
+  display: inline-block;
+}
+
+.participant__icon {
+  color: $color-grey;
+  display: block;
+  @include font-size(.8);
+  padding: .25em;
+
+  &:hover,
+  &:active {
+    color: $color-black;
+  }
+}
+
+.icon__participant-disconnect {
+
+  &:hover,
+  &:focus {
+    color: saturate( $color-red, 20% );
+  }
+
+}
+
+.participant__information {
+
+  .icon {
+
+    &:hover,
+    &:active {
+      color: inherit;
+    }
+  }
+
+}

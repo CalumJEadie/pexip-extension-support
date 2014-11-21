@@ -1,0 +1,113 @@
+@font-face {
+    font-family: 'icomoon';
+    src:url('../fonts/icomoon.eot?-t20kya');
+    src:url('../fonts/icomoon.eot?#iefix-t20kya') format('embedded-opentype'),
+      url('../fonts/icomoon.woff?-t20kya') format('woff'),
+      url('../fonts/icomoon.ttf?-t20kya') format('truetype'),
+      url('../fonts/icomoon.svg?-t20kya#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+%icomoon {
+    font-family: 'icomoon';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    // /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+// set up the placeholders
+%icon {
+  background: transparent;
+  border: none;
+  color: $color-white;
+  font-size: 1.2em;
+
+  @each $icon, $unicode in (
+    show-video: \f191,
+    show-roster: \f152,
+    menu: \f0c9,
+    disconnect: \f011,
+    hide-selfview: \f06e,
+    show-selfview: \f070,
+    mute-my-audio: \f130,
+    enable-my-audio: \f131,
+    hide-my-video: \f03d,
+    enable-my-video: \e600,
+    enable-fullscreen: \f065,
+    disable-fullscreen: \f066,
+    present-screen: \f108,
+    stop-screen-sharing: \e601,
+    view-presentation: \f03e,
+    hide-presentation: \e602,
+    menu-toggle: \f0dd,
+    search: \f002
+  )
+  {
+    &-#{$icon}-before {
+      &:before {
+        content: "#{$unicode}"
+      }
+    }
+
+    &-#{$icon}-after {
+      &:after {
+        content: "#{$unicode}"
+      }
+    }
+  }
+}
+
+.icon {
+  @extend %icomoon;
+  @extend %icon;
+
+  &__label {
+    @extend %visuallyhidden;
+  }
+
+  .disabled & {
+    color: $color-grey;
+  }
+
+  @each $icon-placeholder, $icon-content in (
+    show-video: before,
+    show-roster: before,
+    menu: before,
+    disconnect: before,
+    hide-selfview: before,
+    show-selfview: before,
+    mute-my-audio: before,
+    enable-my-audio: before,
+    hide-my-video: before,
+    enable-my-video: before,
+    enable-fullscreen: before,
+    disable-fullscreen: before,
+    present-screen: before,
+    stop-screen-sharing: before,
+    view-presentation: before,
+    hide-presentation: before,
+    menu-toggle: before,
+    search: before
+    )
+    {
+      &__#{$icon-placeholder} {
+        @extend %icon-#{$icon-placeholder}-#{$icon-content};
+      }
+    }
+
+  &__menu {
+    float: left;
+  }
+
+  &__disconnect {
+    float: right;
+  }
+}

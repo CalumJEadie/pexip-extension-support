@@ -1,0 +1,165 @@
+.popup {
+  display: block;
+  height: auto;
+  text-align: center;
+  // z-index: 11;
+  z-index: z("always-on-top");
+
+  &__message {
+    text-align: left;
+  }
+
+  &__alert,
+  &__confirm,
+  &__prompt {
+    @extend %container-popup;
+
+    @include media-query(portable) {
+      left: 35%;
+      width: 75%;
+
+    }
+  }
+
+  &__confirm,
+  &__prompt {
+    background-color: $color-black;
+    background-color: rgba($color-black,0.5);
+
+    .button {
+      float: left;
+    }
+
+    .button__cancel {
+      float: right;
+    }
+
+  }
+
+  &__prompt {
+
+  }
+
+  &__input {
+    @extend %input-default;
+    margin-top: .5em;
+  }
+
+  &__alert {
+    background-color: $color-black;
+  }
+
+  &__controls {
+    margin: 1em auto;
+    text-align: center;
+
+    .button {
+      width: 40%;
+    }
+
+  }
+
+  &__toast {
+    background: $color-white;
+    background: rgba($color-white, 0.7);
+    border: 2px solid $color-white;
+    border-radius: 2px;
+    color: $color-black;
+    display: inline-block;
+    font-size: .8em;
+    font-weight: normal;
+    max-width: 400px;
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    padding: 1em;
+    width: auto;
+
+    &:hover {
+      background: $color-white;
+      border-color: $color-brand;
+      color: $color-brand;
+    }
+
+    &__controls {
+      margin: 0;
+    }
+
+    &__repeat {
+      &.ng-enter,
+      &.ng-leave {
+        -webkit-transition: 0.3s linear all;
+        transition: 0.3s linear all;
+      }
+
+      &.ng-enter {
+        -webkit-animation: slideInDown 0.5s;
+        animation: slideInDown 0.5s;
+
+        &.ng-enter-active {
+          opacity: 1;
+        }
+
+        &.ng-leave-active {
+          opacity: 0;
+        }
+
+        &.ng-leave {
+          opacity: 1;
+        }
+
+      }
+
+    }
+
+    .button,
+    .button__close {
+      background: transparent;
+      color: $color-black;
+      display: block;
+      font-size: 10px;
+      font-weight: bold;
+      height: auto;
+      margin: 0;
+      padding: 0;
+      position: absolute;
+      top: 1em;
+      right: 1em;
+      width: auto;
+
+      &:hover {
+        border: none;
+        color: $color-brand;
+      }
+    }
+  }
+
+  &__close {
+    background-color: rgba($color-black, 0.85);
+    border: 2px solid $color-white;
+    border-radius: 50%;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, .3);
+    height: 1.5em;
+    position: absolute;
+    top: -1em;
+    right: -1em;
+    width: 1.5em;
+    z-index: z("always-on-top") + 1;
+
+    &:hover {
+      border-color: $color-brand;
+    }
+
+    .button__close {
+      color: $color-white;
+      cursor: pointer;
+      display: block;
+      font-size: .8em;
+      padding-top: .1em;
+
+      &:hover {
+        color: $color-brand;
+      }
+    }
+  }
+}

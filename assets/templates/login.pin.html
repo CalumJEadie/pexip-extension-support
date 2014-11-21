@@ -1,0 +1,17 @@
+<form class="form" ng-submit="login()" autocomplete="off">
+
+  <header class="form__header">
+    <h2 class="form__heading" translate>LOGIN_LOGIN</h2>
+  </header>
+
+  <div ng-show="message" ng-click="message = ''" class="form__alert">{{ message }}</div>
+
+  <div class="form__field">
+    <label class="form__label" for="user-pin-field" translate>LOBBY_ENTER_CONFERENCE_PIN</label>
+    <input class="form__input" id="user-pin-field" type="password" autofocus ng-model="user.pin" maxlength="10">
+  </div>
+  <div class="form__buttons">
+    <button class="form__submit" id="join-button" translate>JOIN</button>
+  </div>
+
+</form>

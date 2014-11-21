@@ -1,0 +1,132 @@
+.form {
+
+  &__container {
+    @extend %container-plain;
+  }
+
+  &__header {
+    border-bottom: 2px solid $color-border;
+    margin-bottom: 1.5em;
+  }
+
+  &__heading {
+    @include font-size(1.875);
+    @extend %sans-serif-light;
+
+    line-height: 1.6;
+    margin: 0 0 .5em;
+
+    a {
+      display: block;
+      @include font-size(1);
+      font-weight: 300;
+    }
+  }
+
+  &__field {
+    margin-bottom: 1em;
+
+    &__heading {
+      display: block;
+      margin-bottom: .5em;
+    }
+  }
+
+  &__alert {
+    background: $color-negative;
+    border: 2px solid transparent;
+    color: $color-white;
+    cursor: pointer;
+    margin-bottom: 1.5em;
+    padding: .5em;
+    text-align: center;
+  }
+
+  &__label {
+    display: block;
+    margin-bottom: .5em;
+  }
+
+  &__inline__label {
+    background: $color-white-off;
+    border: 2px solid transparent;
+    display: block;
+    margin-bottom: .5em;
+    padding: .5em;
+
+    input {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background: $color-white;
+      border: 3px solid $color-white;
+      box-shadow: rgba($color-black,.1) 0 0 10px;
+      color: $color-form-label-input;
+      cursor: pointer;
+      float: left;
+      height: 1.25em;
+      margin-right: 1em;
+      margin-top: -.25em;
+      position: relative;
+      top: 2px;
+      width: 1.25em;
+
+      &:checked {
+        background: $color-grey-dark;
+      }
+
+      &:focus {
+        @include focus;
+      }
+    }
+
+  }
+
+  &__input {
+    @extend %input-default;
+    cursor: text;
+
+    &:focus {
+      @include focus;
+    }
+  }
+
+  &__select {
+    @extend %input-default;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0;
+
+    &:focus {
+      @include focus;
+    }
+  }
+
+  &__buttons {
+    padding: 1.5em 0;
+  }
+
+  &__toggle {
+    display: block;
+    margin-bottom: .5em;
+    padding-top: .5em;
+
+    &:focus {
+      outline: none;
+      text-decoration: underline;
+    }
+  }
+
+  &__submit {
+    @extend %input-default;
+    background: $color-grey-dark;
+    color: $color-white;
+
+    &:hover,
+    &:focus {
+      @include focus;
+    }
+  }
+
+}

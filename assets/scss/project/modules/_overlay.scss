@@ -1,0 +1,13 @@
+.overlay {
+  background-color: rgba($color-black,0.5);
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  // z-index: 10;
+  // z-index: z("overlay");
+  z-index: z("always-on-top");
+}

@@ -1,0 +1,114 @@
+
+<form class="form" ng-submit="login()" role="application">
+
+  <header class="form__header">
+    <h2 class="form__heading" translate>LOGIN_HEADING</h2>
+  </header>
+
+  <div ng-show="message" ng-click="message = ''" class="form__alert">{{ message }}</div>
+
+  <div ng-hide="isDesktopClient">
+
+  <div class="form__field">
+    <label class="form__label" for="conference-id-field">
+      <span translate>LOGIN_LABEL_PERSON_OR_CONFERENCE</span>
+    </label>
+
+    <input class="form__input" id="conference-id-field" autocomplete="off" type="text" autofocus ng-model="conference.id" maxlength="250" input-dropdown data="conferenceHistory" tabindex="1"
+    aria-labelledby="conference-id-field" />
+  </div>
+
+  <div class="form__field">
+    <label class="form__label" for="user-username-field"><span translate>LOGIN_YOUR_NAME</span>
+    </label>
+    <input class="form__input" id="user-username-field" type="text" ng-model="user.username" maxlength="250" tabindex="1" />
+  </div>
+
+  <div>
+    <a href="" id="advanced-controls-show" class="form__toggle" ng-hide="advancedControls" ng-click="advancedControls = !advancedControls;forceRepaint();" tabindex="1"><span translate>LOGIN_ADVANCED_SHOW</span>
+    </a>
+
+    <a href="" id="advanced-controls-hide" class="form__toggle" ng-show="advancedControls" ng-click="advancedControls = !advancedControls;forceRepaint();"><span translate>LOGIN_ADVANCED_HIDE</span>
+    </a>
+  </div>
+
+  <div ng-show="advancedControls">
+    <div class="form__field">
+      <label class="form__label" for="user-bandwidth-field"><span translate>LOGIN_BANDWIDTH</span>
+      </label>
+      <select class="form__select" id="user-bandwidth-field" ng-model="user.bandwidth" ng-options="b.value as b.name for b in bandwidths" tabindex="1">
+      </select>
+    </div>
+
+    <div class="form__field form__checkbox" aria-labelledby="user-screen-field">
+      <p class="form__field__heading" id="user-screen-field"><span translate>LOGIN_PRESENTATION_TYPE</span>
+      </p>
+      <label class="form__inline__label" ng-show="hasChromeWebstore">
+        <input type="checkbox" id="user-screen-field1" ng-model="user.screen" value="screen"
+          role="checkbox"
+          tabindex="1"
+          aria-checked="false"
+          aria-labelledby="user-screen-field1" />
+        <span translate>LOGIN_PRESENT_SCREEN_ONLY</span>
+      </label>
+      <label class="form__inline__label">
+        <input type="checkbox" id="user-screen-field2" ng-model="user.audio" value="audio"
+          role="checkbox"
+          tabindex="1"
+          aria-checked="false"
+          aria-labelledby="user-screen-field2" />
+        <span translate>LOGIN_PRESENT_AUDIO_ONLY</span>
+      </label>
+
+      <!-- <label class="form__inline__label">
+        <input type="checkbox" id="user-screen-field3" ng-model="user.roster" value="audio"
+          role="checkbox"
+          tabindex="1"
+          aria-checked="false"
+          aria-labelledby="user-screen-field3" />
+        <span translate>LOGIN_ROSTER_ONLY</span>
+      </label> -->
+    </div>
+
+    <div class="form__field" ng-show="hasChromeWebstore">
+      <label class="form__label" for="audio-source"><span translate>LOGIN_MICROPHONE</span>
+      </label>
+      <select class="form__select" id="audo-source" ng-model="settings.audioSourceObject" ng-options="source.label for source in audioMediaSources" tabindex="1">
+      </select>
+    </div>
+
+    <div class="form__field" ng-show="hasChromeWebstore">
+      <label class="form__label" for="video-source"><span translate>LOGIN_CAMERA</span>
+      </label>
+      <select class="form__select" id="video-source" ng-model="settings.videoSourceObject" ng-options="source.label for source in videoMediaSources" tabindex="1">
+      </select>
+      <img href="assets/images/spinner.gif" />
+    </div>
+  </div>
+
+  <div class="form__buttons">
+    <button class="form__submit" tabindex="1" id="join-button"><span translate>LOGIN_JOIN</span>
+    </button>
+  </div>
+
+  </div>
+
+</form>
+
+<span ng-hide="true">Page loaded in {{ pageLoadTime }} ms </span>
+<div ng-if="load_flash" style="left: -9999px; position: absolute;">
+  <div swf-object replace-id="flashContent" src="assets/flash/PexVideo.swf" width="100%" height="100%" />
+      <div id="flashContent">
+              <p>
+                      To view this page ensure that Adobe Flash Player version
+                      11.1.0 or greater is installed.
+              </p>
+              <!--
+                      var pageHost = ((document.location.protocol == "https:") ? "https://" : "http://");
+                      document.write("<a href='http://www.adobe.com/go/getflashplayer'><img src='"
+                                                      + pageHost + "www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player' /></a>" );
+            -->
+      </div>
+  </div>
+</div>
+<!--<span ng-hide="overrideBandwidth">Bandwidth estimated: {{ bandwidthEstimated }} kbps</span>-->

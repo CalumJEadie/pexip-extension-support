@@ -1,0 +1,23 @@
+@mixin flexbox() {
+  display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+  display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  display: -ms-flexbox;      /* TWEENER - IE 10 */
+  display: -webkit-flex;     /* NEW - Chrome */
+  display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+}
+
+@mixin flex($values) {
+  -webkit-box-flex: $values;  /* OLD - iOS 6-, Safari 3.1-6 */
+  -moz-box-flex:  $values;    /* OLD - Firefox 19- */
+  -webkit-flex:  $values;     /* Chrome */
+  -ms-flex:  $values;         /* IE 10 */
+  flex:  $values;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+}
+
+@mixin order($val) {
+  -webkit-box-ordinal-group: $val;
+  -moz-box-ordinal-group: $val;
+  -ms-flex-order: $val;
+  -webkit-order: $val;
+  order: $val;
+}

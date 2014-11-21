@@ -1,0 +1,126 @@
+<div ng-click="menu.close()" resizable>
+
+    <div class="screen-controls">
+        <button title="{{ 'CONFERENCE_ROSTER' | translate }}" class="videoToggle icon icon__show-roster" ng-show="windowWidth <= 800" ng-click="controls.showSideBarClick();"><span class="icon__label">{{ 'CONFERENCE_ROSTER' | translate }}</span></button>
+
+    </div>
+
+
+    <aside class="sidebar">
+        <div class="topbar">
+            <h1 class="conference" ng-click="menu.open('settings', $event)">{{conference.id}}</h1>
+            <div class="settings">
+
+                <button class="button menu__button" href="" ng-click="menu.open('settings', $event)">menu</button>
+
+                <ul ng-show="menu.isOpen('settings')" class="settings__menu" id="settings">
+                    <li><a href="" ng-show="user.isHost()" ng-click="participant.add()">Add a new participant</a></li>
+                    <li><a href="" ng-click="versionOverlay()">About this app</a></li>
+                </ul>
+
+                <button title="Disconnect" class="button disconnect__button" ng-click="user.disconnect('../')">disconnect</button>
+
+            </div>
+        </div>
+
+        <div ng-hide="conference.isGateway">
+            <div class="participantsbar">
+                <input type="search" ng-model="search" placeholder="Search participants…" />
+            </div>
+            <div class="participants">
+                <ul>
+                    <li class="participant" ng-repeat="p in participants | filter: {name: search} | orderBy:'connection_duration':false">
+                        <div class="participant__name">{{p.name}}</a>
+                        <div class="participant__role">
+                            {{p.role}}
+                            <span ng-show="p.is_muted"> / muted</span>
+                            <span ng-show="p.is_presenting"> / presenting</span>
+                        </div>
+                        <a ng-show="user.isHost()" class="particicpant__menuToggle" href="" ng-click="menu.open('participant__' + p.uuid, $event)">options</a>
+                        <ul ng-show="menu.isOpen('participant__' + p.uuid)" class="settings__menu participant__menu">
+                            <li>
+                                <a href="" ng-click="participant.mute(p)">
+                                    <span ng-show="!p.is_muted">Mute participant</span>
+                                    <span ng-show="p.is_muted">Unmute participant</span>
+                                </a>
+                            </li>
+                            <li><a href="" ng-click="participant.disconnect(p)">Disconnect participant</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="sidebar__message" ng-show="conference.isGateway">
+            <p>The roster list is not available for calls made directly to another person.</p>
+        </div>
+    </aside>
+
+        <div class="screen">
+
+            <figure class="video" ng-show="!presentation.active">
+                <div swf-object replace-id="flashContent" src="assets/flash/PexVideo.swf" width="100%" height="100%" />
+                <div id="flashContent">
+                        <p>
+                                To view this page ensure that Adobe Flash Player version
+                                11.1.0 or greater is installed.
+                        </p>
+                        <!--
+                                var pageHost = ((document.location.protocol == "https:") ? "https://" : "http://");
+                                document.write("<a href='http://www.adobe.com/go/getflashplayer'><img src='"
+                                                                + pageHost + "www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player' /></a>" );
+                      -->
+                </div>
+
+            </figure>
+
+            <figure class="video centered" ng-show="presentation.active">
+                <video class="centered" width="100%" id="presentation" autoplay="autoplay" poster="../assets/images/spinner.gif"/>
+            </figure>
+
+            <nav ng-hide="user.screen()" class="screenbar" role="navigation">
+                <ul class="grid--full">
+                    <li class="grid__item one-third lap-one-half palm-one-whole">
+                        <a class="selfview-icon" ng-class="{inactive: selfview.active == false}" href="" ng-click="selfview.toggle()">
+                            <span ng-show="selfview.active">Hide selfview</span>
+                            <span ng-show="!selfview.active">Show selfview</span>
+                        </a>
+                    </li><!--
+             --><li class="grid__item one-third lap-one-half palm-one-whole">
+                        <a class="audio-icon" ng-class="{inactive: audio.active == false}" href="" ng-click="audio.toggle()">
+                            <span ng-show="audio.active">Mute my audio</span>
+                            <span ng-show="!audio.active">Enable my audio</span>
+                        </a>
+                    </li><!--
+             --><li class="grid__item one-third lap-one-half palm-one-whole">
+                        <a class="video-icon" ng-class="{inactive: video.active == false}" href="" ng-click="video.toggle()">
+                            <span ng-show="video.active">Hide my video</span>
+                            <span ng-show="!video.active">Enable my video</span>
+                        </a>
+                    </li><!--
+             --><li class="grid__item one-third lap-one-half palm-one-whole">
+                        <a class="fullscreen-icon" ng-class="{inactive: fullscreen.active == false}" href="" ng-click="fullscreen.toggle()">
+                            <span ng-show="fullscreen.active">Disable fullscreen</span>
+                            <span ng-show="!fullscreen.active">Enable fullscreen</span>
+                        </a>
+                    </li><!--
+             --><li class="grid__item one-third lap-one-half palm-one-whole">
+                        <a ng-class="screenshare.className()" class="screen-icon" href="" ng-click="screenshare.toggle()">
+                            <span ng-show="screenshare.active">Stop screen sharing</span>
+                            <span ng-show="!screenshare.active">Present screen</span>
+                        </a>
+                    </li><!--
+             --><li class="grid__item one-third lap-one-half palm-one-whole">
+                        <a ng-show="!presentation.active" class="presentation-icon" ng-class="{disabled: presentation.available == false}" href="" ng-click="presentation.open()">
+                            <span>View presentation</span>
+                        </a>
+                        <a ng-show="presentation.active" class="presentation-icon" href="" ng-click="presentation.close()">
+                            <span>Hide presentation</span>
+                        </a>
+                    </li><!--
+         --></ul>
+            </nav>
+        </div>
+
+
+</div>

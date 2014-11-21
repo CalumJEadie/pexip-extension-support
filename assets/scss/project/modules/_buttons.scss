@@ -1,0 +1,38 @@
+%button {
+  background: $color-grey-dark;
+  border: 2px solid transparent;
+  border-radius: 3px;
+  color: $color-white;
+  font-size: 1em;
+  line-height: 1.5em;
+  padding: .5em;
+
+  &:hover,
+  &:focus {
+    border-color: $color-brand;
+    outline: 0;
+  }
+}
+
+.button {
+  @extend %button;
+
+  &__menu {
+    background: url(../images/button.menu.png) no-repeat center center;
+    left: 1.1em;
+    margin-top: -2px;
+  }
+
+  // &__show-video {
+  //   background: transparent url(../images/icon-show-video.png) no-repeat center center;
+  // }
+
+  // &__show-roster {
+  //   background: transparent url(../images/icon-show-roster.png) no-repeat center center;
+  // }
+
+  &__label {
+    @extend %visuallyhidden
+  }
+
+}

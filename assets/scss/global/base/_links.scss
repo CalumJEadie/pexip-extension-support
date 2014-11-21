@@ -1,0 +1,9 @@
+a {
+  // @include vendor(transition, all .3s);
+  color: $color-brand;
+  text-decoration: none;
+
+  &:hover {
+    color: $color-text;
+  }
+}

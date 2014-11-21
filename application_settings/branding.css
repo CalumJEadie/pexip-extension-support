@@ -1,0 +1,376 @@
+/**
+*
+* Branding override CSS
+*
+* Uncomment any of the declarations below to override base CSS styles
+*
+* colour values can be replaced with the colour of your choice.
+* This can be HEX, RGB, HSL or a web safe colour
+*
+**/
+
+html {
+  /**
+  * Override repeating background image on login page
+  *
+  * To amend either the background colour or the
+  * background image (or both) on the login page
+  * Please upload a new background image to the
+  * /application_settings/ directory
+  *
+  **/
+
+  /*
+  background: #eee url(../application_settings/list-background.png);
+  */
+}
+
+/** Change base font colour throughout app **/
+body {
+  color: #222;
+}
+
+.brand__logo {
+  /**
+  *
+  * To amend the logo on the login page
+  * Please upload a new logo to the /application_settings/ directory
+  * Ensure the height and width are set
+  *
+  **/
+
+  /*
+  background-image: url(../application_settings/logo.png);
+  height: 45px;
+  width: 86px;
+  */
+}
+
+.conference__details {
+  /*
+  background-color: #f38b3c;
+  border-bottom-color: #d07125;
+  color: #fff;
+  */
+}
+
+.conference__heading {
+  /*
+  color: #fff;
+  */
+}
+
+.controls nav {
+  /*
+  background-color: rgba(0, 0, 0, 0.25);
+  */
+}
+
+.controls nav:hover {
+  /*
+  background-color: rgba(0, 0, 0, 0.75);
+  */
+}
+
+/** change colour of icons throughtout app **/
+
+.screenbar-icon {
+  /*
+  color: #ccc;
+  */
+}
+
+.screenbar-icon:hover,
+.screenbar-icon:active {
+  /*
+  color: #fff;
+  */
+}
+
+.icon__disconnect {
+  /*
+  color: #a2433d;
+  */
+}
+
+.icon__disconnect:hover,
+.icon__disconnect:active {
+  /*
+  color: #b82f27;
+  */
+}
+
+.icon__unlocked {
+  /*
+  color: #fff;
+  */
+}
+
+.icon__unlocked:hover,
+.icon__unlocked:active {
+  /*
+  color: #444;
+  */
+}
+
+.icon__locked {
+  /*
+  color: #a2433d;
+  */
+}
+
+.icon__locked:hover,
+.icon__locked:active {
+  /*
+  color: #b82f27;
+  */
+}
+
+.icon__participant-add {
+  /*
+  color: #fff;
+  */
+}
+
+.icon__participant-add:hover,
+.icon__participant-add:active {
+  /*
+  color: #444;
+  */
+}
+
+/** Style search box colours **/
+.search__participants {
+  /*
+  background: #fff;
+  border-bottom-color: #ddd;
+  */
+}
+.search__participants .icon__search {
+  /*
+  color: #ccc;
+  */
+}
+
+/** Style element form colours **/
+.form__heading {
+  /*
+  color: #222;
+  */
+}
+
+.form__label {
+  /*
+  color: #222;
+  */
+}
+
+.form__alert {
+  /*
+  background: #a2433d;
+  border-color: transparent;
+  color: #fff;
+  */
+}
+
+.form__input:focus {
+  /*
+  border-color: #ccc;
+  */
+}
+
+.form__toggle {
+  /** change colour of 'advanced' toggle text on login screen **/
+  /*
+  color: #f38b3c;
+  */
+}
+.form__toggle:hover,
+.form__toggle:active {
+  /*
+  color: #222;
+  */
+}
+
+.controls__toggle .collapse {
+  /*
+  background-color: #f38b3c;
+  */
+}
+.controls__toggle .collapse:hover,
+.controls__toggle .collapse:active {
+  /*
+  background-color: #f38b3c;
+  */
+}
+
+.controls__toggle .icon {
+  /*
+  background: rgba(0, 0, 0, 0.25);
+  color: #ccc;
+  */
+}
+.controls__toggle .icon:hover,
+.controls__toggle .icon:active {
+  /*
+  color: #fff;
+  */
+}
+
+.flex__sidebar.collapse {
+  /*
+  border-right-color: #f38b3c;
+  */
+}
+
+.form__submit {
+  /*
+  background-color: #444;
+  border-color: transparent;
+  color: #fff;
+  */
+}
+.form__submit:hover,
+.form__submit:focus {
+  /*
+  background-color: #444;
+  border-color: #ccc;
+  color: #fff;
+  */
+}
+
+/** The following can be styled together or separately **/
+.popup__input,
+.form__input,
+.form__select,
+.form__submit {
+  /*
+  background-color: #eee;
+  border-color: transparent;
+  color: #222;
+  */
+}
+
+.form__input:focus {
+  /*
+  border-color: #ccc;
+  */
+}
+
+.autocomplete__container {
+  /*
+  background: #fff;
+  border-color: #ccc;
+  */
+}
+
+.autocomplete__item:hover {
+  /*
+  background-color: #ccc;
+  */
+}
+
+.popup__message {
+  /*
+  color: #fff;
+  */
+}
+
+.popup__confirm,
+.popup__prompt {
+  /*
+  background-color: #000;
+  background-color: rgba(0, 0, 0, 0.5);
+  */
+}
+
+.popup__alert {
+  /*
+  background-color: #000;
+  background-color: rgba(0, 0, 0, 0.5);
+  */
+}
+
+.popup__toast {
+  /*
+  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-color: transparent;
+  color: #222;
+  */
+}
+.popup__toast:hover {
+  /*
+  background-color: #fff;
+  border-color: #ccc;
+  */
+}
+
+.page-footer a {
+  /*
+  color: red;
+  border-bottom-color: #ccc;
+  text-decoration: none;
+  */
+}
+
+.page-footer a:hover,
+.page-footer a:active {
+  /*
+  color: #999;
+  border-bottom-color: #ccc;
+  text-decoration: none;
+  */
+}
+
+.participant__name {
+  /*
+  color: #333;
+  */
+}
+
+.participant__icon {
+  /*
+  color: #999;
+  */
+}
+.participant__icon:hover,
+.participant__icon:active {
+  /*
+  color: #000;
+  */
+}
+
+.icon__participant-disconnect:hover {
+  /*
+  color: #b82f27;
+  */
+}
+
+.search__participants input {
+  /*
+  color: #f38b3c;
+  */
+}
+
+.button {
+  /*
+  background: #444;
+  border-color: transparent;
+  color: #fff;
+  */
+}
+.button:hover,
+.button:focus {
+  /*
+  background: #444;
+  border-color: #ccc;
+  color: #fff;
+  */
+}
+
+.stage-audio-only {
+  /*
+  background: #333 url(../images/audio_avatar.png) center center no-repeat;
+  */
+}

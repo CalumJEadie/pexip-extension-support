@@ -1,0 +1,74 @@
+<div class="popup__wrapper">
+  <div class="popup__dialog popup__keypad">
+    <div class="popup__message keypad">
+
+      <div class="keypad__wrapper">
+        <div class="keypad__row">
+          <span class="keypad__item" ng-click="buttonClick('1');">
+            <strong class="keypad__key">1</strong>
+            <span class="keypad__letters"></span>
+          </span>
+          <span class="keypad__item" ng-click="buttonClick('2');">
+            <strong class="keypad__key">2</strong>
+            <span class="keypad__letters">abc</span>
+          </span>
+          <span class="keypad__item" ng-click="buttonClick('3');">
+            <strong class="keypad__key">3</strong>
+            <span class="keypad__letters">def</span>
+          </span>
+        </div>
+
+        <div class="keypad__row">
+          <span class="keypad__item" ng-click="buttonClick('4');">
+            <strong class="keypad__key">4</strong>
+            <span class="keypad__letters">ghi</span>
+          </span>
+          <span class="keypad__item" ng-click="buttonClick('5');">
+            <strong class="keypad__key">5</strong>
+            <span class="keypad__letters">jkl</span>
+          </span>
+          <span class="keypad__item" ng-click="buttonClick('6');">
+            <strong class="keypad__key">6</strong>
+            <span class="keypad__letters">mno</span>
+          </span>
+        </div>
+
+        <div class="keypad__row">
+          <span class="keypad__item" ng-click="buttonClick('7');">
+            <strong class="keypad__key">7</strong>
+            <span class="keypad__letters">pqrs</span>
+          </span>
+          <span class="keypad__item" ng-click="buttonClick('8');">
+            <strong class="keypad__key">8</strong>
+            <span class="keypad__letters">tuv</span>
+          </span>
+          <span class="keypad__item" ng-click="buttonClick('9');">
+            <strong class="keypad__key">9</strong>
+            <span class="keypad__letters">wxyz</span>
+          </span>
+        </div>
+
+        <div class="keypad__row">
+          <span class="keypad__item" ng-click="buttonClick('*');">
+            <strong class="keypad__key">*</strong>
+            <span class="keypad__letters"></span>
+          </span>
+          <span class="keypad__item" ng-click="buttonClick('0');">
+            <strong class="keypad__key">0</strong>
+            <span class="keypad__letters"></span>
+          </span>
+          <span class="keypad__item" ng-click="buttonClick('#');">
+            <strong class="keypad__key">#</strong>
+            <span class="keypad__letters"></span>
+          </span>
+        </div>
+      </div>
+
+      <span class="popup__close" ng-click="closeClick();">
+        <i class="icon icon__close" title="{{ 'KEYPAD_CLOSE' | translate }}"></i>
+        <span class="icon__label">{{ 'KEYPAD_CLOSE' | translate }}</span>
+      </span>
+
+    </div>
+  </div>
+</div>

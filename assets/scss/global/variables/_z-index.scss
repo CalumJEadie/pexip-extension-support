@@ -1,0 +1,29 @@
+// Existing z-indexes
+// z-index: 9999 - loading - sidebar
+// z-index: 2000 - autocomplete__container
+// z-index: 1000 - participant - topbar - screen-controls
+// z-index: 200 - popup
+// z-index: 11 - popup
+// z-index: 10 - overlay
+// z-index: 5 - screenbar
+// z-index: 2 - minimise
+// z-index: 1 - presentation - stage - selfview
+
+$z-layers: (
+  "always-on-top": 8,
+  "participant": 7,
+  "modal-button": 6,
+  "modal": 5,
+  "overlay": 4,
+  "screenbar": 3,
+  "minimise": 2,
+  "default": 1
+);
+
+@function z($layer) {
+  @if not map-has-key($z-layers, $layer) {
+    @warn "No layer found for `#{$layer}` in $z-layers map. Property omitted.";
+  }
+
+  @return map-get($z-layers, $layer);
+}

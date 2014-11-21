@@ -1,0 +1,73 @@
+<div ng-click="menu.close()" >
+  <aside class="sidebar" style="width: 100%; box-shadow: rgba(0,0,0,0.1) 0 2px 2px;" ng-class="{'has-selfview': selfview.active, collapse: selfview.collapse }">
+    <div class="topbar">
+      <h1 class="conference" ng-click="menu.toggle('settings', $event)">{{conference.id}}</h1>
+      <div class="settings">
+
+        <button title="Menu" class="icon icon__menu" ng-click="menu.toggle('settings', $event)"><span class="icon__label" translate>CONFERENCE_MENU</span></button>
+
+        <ul ng-show="menu.isOpen('settings')" class="settings__menu" id="settings">
+          <li ng-show="presentation.active && presentation.enableVideoPresentation && presentation.showImage"><a href="" ng-click="presentation.elevateToVideo();">View HD presentation</a></li>
+          <li ng-show="menu.showLanguage"><a href="" ng-click="controls.language.en()">English mode</a></li>
+          <li ng-show="menu.showLanguage"><a href="" ng-click="controls.language.debug()">Debug mode</a></li>
+
+          <li><a href="" ng-show="user.isHost()" ng-click="participant.add()" translate>CONFERENCE_ADD_A_NEW_PARTICIPANT</a></li>
+          <li><a href="" ng-click="controls.versionOverlay()" translate>CONFERENCE_ABOUT_THIS_APP</a></li>
+
+        </ul>
+
+
+
+        <button title="Disconnect" class="icon icon__disconnect" ng-click="controls.disconnect('./')"><span class="icon__label" translate>CONFERENCE_DISCONNECT</span></button>
+
+      </div>
+    </div>
+
+
+    <div ng-hide="conference.isGateway">
+      <div class="participantsbar">
+        <input type="search" ng-model="search" placeholder="{{ 'CONFERENCE_SEARCH_PARTICIPANTS' | translate }}" />
+        <i class="icon icon__search"></i>
+
+      </div>
+      <div class="participants">
+        <ul>
+          <li class="participant" ng-repeat="p in participants | filter: {name: search} | orderBy:'connection_duration':false">
+            <div class="participant__name">{{p.name}}</a>
+              <div class="participant__role">
+                {{p.role}}
+                <span ng-show="p.is_muted" translate>CONFERENCE_MUTED</span>
+                <span ng-show="p.is_presenting" translate>CONFERENCE_PRESENTING</span>
+              </div>
+              <a ng-show="user.isHost()" class="participant__menuToggle icon icon__menu-toggle" href="" ng-click="menu.open('participant__' + p.uuid, $event)"><span class="icon__label" translate>CONFERENCE_OPTIONS</span></a>
+              <ul ng-show="menu.isOpen('participant__' + p.uuid)" class="settings__menu participant__menu">
+                <li>
+                  <a href="" ng-click="participant.mute(p)">
+                    <span ng-show="!p.is_muted" translate>CONFERENCE_MUTE_PARTICIPANT</span>
+                    <span ng-show="p.is_muted" translate>CONFERENCE_UNMUTE_PARTICIPANT</span>
+                  </a>
+                </li>
+                <li><a href="" ng-click="participant.disconnect(p)" translate>CONFERENCE_DISCONNECT_PARTICIPANT</a></li>
+              </ul>
+          </li>
+        </ul>
+        </div>
+      </div>
+
+      <div class="sidebar__message" ng-show="conference.isGateway">
+        <p translate>CONFERENCE_DIRECT_CALL_UNAVAILABLE_ROSTER_LIST</p>
+      </div>
+
+  </aside>
+
+
+
+  <!-- container to inject popups into the DOM -->
+
+  <div popup-container items="popupList"></div>
+  <div popup-container items="dialogList"></div>
+
+  <!-- DTMF keypad -->
+  <div dtmf class="key-pad-container" ng-show="controls.dtmfVisible"></div>
+
+</div>

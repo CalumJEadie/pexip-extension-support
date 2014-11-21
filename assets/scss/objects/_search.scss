@@ -1,0 +1,30 @@
+.search__participants {
+  background: $color-white;
+  border-bottom: 1px solid $color-border;
+  position: relative;
+
+  input {
+    @extend %sans-serif-light;
+    @include font-size(0.875);
+    background: transparent;
+    border: 0;
+    color: $color-brand;
+    font-weight: fw("book");
+    line-height: 1.2;
+    width: 75%;
+
+    &:focus {
+      outline: 0;
+    }
+  }
+}
+
+.search__participants {
+  .icon__search {
+    @include font-size(1.25);
+    color: $color-grey-light;
+    padding: .5em .75em;
+    position: absolute;
+    right: 0;
+  }
+}

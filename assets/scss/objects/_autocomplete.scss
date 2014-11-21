@@ -1,0 +1,33 @@
+.autocomplete {
+  background: $color-white;
+  display: block;
+  height: auto;
+  min-height: 44px;
+  position: relative;
+  width: 100%;
+
+  &__container {
+    background: $color-white;
+    border: solid 2px $color-grey-light;
+    margin-top: -2px;
+    max-height: 8em;
+    overflow: scroll;
+    position: absolute;
+    width: 100%;
+    z-index: z("always-on-top");
+  }
+
+  &__item {
+    cursor: default;
+    padding: .5em;
+
+    &:hover {
+      background: $color-grey-light;
+    }
+  }
+
+  .selected {
+    background: $color-orange;
+  }
+
+}

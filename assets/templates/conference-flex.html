@@ -1,0 +1,263 @@
+<div class="flex__container">
+
+  <div class="controls__independant controls__toggle">
+    <button title="{{ 'CONFERENCE_ROSTER' | translate }}" class="controls__item icon"
+      ng-click="controls.showSideBarClick();"
+      ng-class="{
+        'icon__roster-hide': selfview.collapse,
+        'icon__roster-show': !selfview.collapse,
+        'expand': !selfview.collapse,
+        'collapse': selfview.collapse }">
+      <span class="icon__label">{{ 'CONFERENCE_ROSTER' | translate }}</span>
+    </button>
+  </div>
+
+  <div class="flex__sidebar"
+    ng-class="{
+      'has-selfview': selfview.active,
+      'expand': !selfview.collapse,
+      'collapse': selfview.collapse }">
+
+    <div class="conference__details sidebar__item">
+
+      <div ng-hide="conference.isGateway">
+        <span ng-show="conference.locked" class="conference__locked" ng-click="controls.unlockConference();">
+          <i class="icon icon__locked" title="{{ 'CONFERENCE_LOCKED' | translate }}"></i>
+          <span class="icon__label">{{ 'CONFERENCE_LOCKED' | translate }}</span>
+        </span>
+
+        <span ng-show="!conference.locked" class="conference__unlocked" ng-click="controls.lockConference();">
+          <i class="icon icon__unlocked" title="{{ 'CONFERENCE_UNLOCKED' | translate }}"></i>
+          <span class="icon__label">{{ 'CONFERENCE_UNLOCKED' | translate }}</span>
+        </span>
+      </div>
+
+      <h1 class="conference__heading" ng-click="menu.open('settings', $event)">
+        {{conference.id}}
+      </h1>
+
+      <a title="{{ 'CONFERENCE_ADD_A_NEW_PARTICIPANT' | translate }}" class="participant__add" href="" ng-show="user.isHost()" ng-click="participant.add()">
+        <i class="icon icon__participant-add"></i>
+        <span class="icon__label">{{ 'CONFERENCE_ADD_A_NEW_PARTICIPANT' | translate }}</span>
+      </a>
+    </div>
+
+    <div class="roster">
+
+      <div class="search__participants">
+        <input class="sidebar__item" type="search" ng-model="search" placeholder="{{ 'CONFERENCE_SEARCH_PARTICIPANTS' | translate }}" />
+        <i class="icon icon__search"></i>
+      </div>
+
+      <div class="filter">
+      </div>
+
+      <div class="roster__wrapper">
+        <div class="box">
+          <ul class="roster__list" roster-height ng-style="{ height: rosterHeight }">
+
+            <li class="roster__item participant" ng-repeat="p in participants | filter: {name: search} | orderBy:'connection_duration':false">
+              <div class="participant__name sidebar__item">
+                <!-- <i class="icon icon__buzz" title="{{ 'CONFERENCE_PARTICIPANT_BUZZ' | translate }}"></i> -->
+
+                <span class="participant__label">{{ p.name }}</span>
+
+                <div class="participant__controls">
+
+                  <span class="participant__control participant__presenting participant__information" ng-click="controls.presentationEscalate();" ng-show="p.is_presenting">
+                    <i class="participant__icon icon icon__presenting" title="{{ 'CONFERENCE_PRESENTING_TOOLTIP' | translate }}"></i>
+                    <span class="icon__label">{{ 'CONFERENCE_PRESENTING_TOOLTIP' | translate }}</span>
+                  </span>
+
+                  <a class="participant__control participant__mute participant__action" href="" ng-click="participant.mute(p)" ng-show="user.isHost()">
+                    <span ng-show="!p.is_muted">
+                      <i class="participant__icon icon icon__participant-mute" title="{{ 'CONFERENCE_MUTE_PARTICIPANT' | translate }}"></i>
+                      <span class="icon__label">{{ 'CONFERENCE_MUTE_PARTICIPANT' | translate }}</span>
+                    </span>
+                    <span ng-show="p.is_muted">
+                      <i class="participant__icon icon icon__participant-enable" title="{{ 'CONFERENCE_UNMUTE_PARTICIPANT' | translate }}"></i>
+                      <span class="icon__label">{{ 'CONFERENCE_UNMUTE_PARTICIPANT' | translate }}</span>
+                    </span>
+                  </a>
+
+                  <a class="participant__control participant__disconnect participant__action" href="" ng-click="participant.disconnect(p)" ng-show="user.isHost()">
+                    <i class="participant__icon icon icon__participant-disconnect" title="{{ 'CONFERENCE_DISCONNECT_PARTICIPANT' | translate }}"></i>
+                    <span class="icon__label">{{ 'CONFERENCE_DISCONNECT_PARTICIPANT' | translate }}</span>
+                  </a>
+
+                  <!-- <span class="participant__control participant__host participant__information" ng-show="user.isHost()">
+                    <i class="participant__icon icon icon__host" title="{{ 'CONFERENCE_IS_HOST' | translate }}"></i>
+                    <span class="icon__label">{{ 'CONFERENCE_IS_HOST' | translate }}</span>
+                  </span> -->
+
+                </div>
+
+              </div>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="flex__main">
+    <div class="selfview"
+      ng-class="{
+        'visible': selfview.active}"
+        ng-click="selfview.hide()">
+      <figure>
+        <video width="100%" id="selfview" muted="true" autoplay="autoplay" poster="assets/images/spinner.gif" />
+      </figure>
+    </div>
+
+    <div class="screen" toggle-hover="hover" toggle-overlaid="overlaid" wait="5000">
+      <div class="controls">
+
+        <nav class="screenbar" role="navigation"
+          ng-class="{
+            'presentation__screenbar': presentation.active}">
+          <a class="controls__item" href="" ng-click="selfview.toggle()" ng-class="{ 'inactive': selfview.active == false }">
+            <span ng-show="selfview.active">
+              <i class="icon screenbar-icon icon__selfview-hide" title="{{ 'CONFERENCE_HIDE_SELFVIEW' | translate }}"></i>
+              <span class="icon__label">{{ 'CONFERENCE_HIDE_SELFVIEW' | translate }}</span>
+            </span>
+
+            <span ng-show="!selfview.active">
+              <i class="icon screenbar-icon icon__selfview-show" title="{{ 'CONFERENCE_SHOW_SELFVIEW' | translate }}"></i>
+              <span class="icon__label">{{ 'CONFERENCE_SHOW_SELFVIEW' | translate }}</span>
+            </span>
+          </a>
+
+          <a class="controls__item" href="" ng-hide="user.screenValue()" ng-click="audio.toggle()" ng-class="{ 'inactive': audio.active == false }">
+            <span ng-show="audio.active">
+              <i class="icon screenbar-icon icon__mic-mute" title="{{ 'CONFERENCE_MUTE_MY_AUDIO' | translate }}"></i>
+              <span class="icon__label">{{ 'CONFERENCE_MUTE_MY_AUDIO' | translate }}</span>
+            </span>
+
+            <span ng-show="!audio.active">
+              <i class="icon screenbar-icon icon__mic-enable" title="{{ 'CONFERENCE_ENABLE_MY_AUDIO' | translate }}"></i>
+              <span class="icon__label">{{ 'CONFERENCE_ENABLE_MY_AUDIO' | translate }}</span>
+            </span>
+          </a>
+
+          <a class="controls__item" href="" ng-hide="user.screenValue()" ng-click="video.toggle()" ng-class="{ 'inactive': video.active == false }">
+            <span ng-show="video.active">
+              <i class="icon screenbar-icon icon__video-hide" title="{{ 'CONFERENCE_HIDE_MY_VIDEO' | translate }}"></i>
+              <span class="icon__label">{{ 'CONFERENCE_HIDE_MY_VIDEO' | translate }}</span>
+            </span>
+
+            <span ng-show="!video.active">
+              <i class="icon screenbar-icon icon__video-enable" title="{{ 'CONFERENCE_ENABLE_MY_VIDEO' | translate }}"></i>
+              <span class="icon__label">{{ 'CONFERENCE_ENABLE_MY_VIDEO' | translate }}</span>
+            </span>
+          </a>
+
+          <a class="controls__item" href="" ng-hide="user.screenValue()" ng-click="fullscreen.toggle()" ng-class="{ 'inactive': fullscreen.active == false }">
+            <span ng-show="fullscreen.active">
+              <i class="icon screenbar-icon icon__fullscreen-disable" title="{{ 'CONFERENCE_DISABLE_FULLSCREEN' | translate }}"></i>
+              <span class="icon__label">{{ 'CONFERENCE_DISABLE_FULLSCREEN' | translate }}</span>
+            </span>
+
+            <span ng-show="!fullscreen.active">
+              <i class="icon screenbar-icon icon__fullscreen-enable" title="{{ 'CONFERENCE_ENABLE_FULLSCREEN' | translate }}"></i>
+              <span class="icon__label">{{ 'CONFERENCE_ENABLE_FULLSCREEN' | translate }}</span>
+            </span>
+          </a>
+
+          <a class="controls__item" ng-hide="!hasChromeWebstore || user.screenValue()" ng-class="screenshare.className()" href="" ng-click="screenshare.toggle()">
+             <span ng-show="screenshare.active">
+              <i class="icon screenbar-icon icon__screen-stop-sharing" title="{{ 'CONFERENCE_STOP_SCREEN_SHARING' | translate }}"></i>
+              <span class="icon__label">{{ 'CONFERENCE_STOP_SCREEN_SHARING' | translate }}</span>
+            </span>
+
+            <span ng-show="!screenshare.active">
+              <i class="icon screenbar-icon icon__screen-present" title="{{ 'CONFERENCE_PRESENT_SCREEN' | translate }}"></i>
+              <span class="icon__label">{{ 'CONFERENCE_PRESENT_SCREEN' | translate }}</span>
+            </span>
+          </a>
+
+          <a class="controls__item" href="" ng-click="controls.dtmfVisible = !!!controls.dtmfVisible">
+            <i class="icon screenbar-icon icon__keypad" title="{{ 'CONFERENCE_KEYPAD' | translate }}"></i>
+            <span class="icon__label">{{ 'CONFERENCE_KEYPAD' | translate }}</span>
+          </a>
+
+          <a class="controls__item" href="" ng-hide="isDesktopClient" ng-click="controls.versionOverlay()">
+            <i class="icon screenbar-icon icon__about" title="{{ 'CONFERENCE_ABOUT_THIS_APP' | translate }}"></i>
+            <span class="icon__label">{{ 'CONFERENCE_ABOUT_THIS_APP' | translate }}</span>
+          </a>
+
+          <div class="controls__item controls__disconnect">
+            <button title="Disconnect" class="controls__item icon icon__disconnect" ng-click="controls.disconnect('./')">
+              <span class="icon__label">{{ 'CONFERENCE_DISCONNECT' | translate }}</span>
+            </button>
+          </div>
+
+        </nav>
+
+
+      </div>
+
+      <figure
+        class="stage stage__main video"
+        ng-class="{
+          'stage--max': !presentation.maximised,
+          'stage--min': presentation.maximised,
+          'presentation--active': presentation.active,
+          'presentation--inactive': !presentation.active,
+          'stage-audio-only': audioOnlyResolved && callConnected }">
+        <video
+          class="video centered stage__child"
+          width="100%"
+          id="video"
+          autoplay="autoplay"
+          poster="assets/images/spinner.gif"
+          ng-click="presentation.toggleView('video');"
+          ng-class="{
+            'active': presentation.maximised,
+            'inactive': !presentation.maximised }" />
+      </figure>
+
+      <figure
+        class="presentation video"
+        ng-show="presentation.active"
+        ng-class="{
+          'presentation--max': presentation.maximised,
+          'presentation--min': !presentation.maximised,
+          'centered': presentation.maximised }">
+
+        <img
+          class="presentation__image presentation__child centered"
+          ng-click="presentation.toggleView('presentation');"
+
+          ng-src="{{ presentation.imageSrc }}"
+          ng-class="{
+            'active': !presentation.maximised,
+            'inactive': presentation.maximised }"
+          poster="assets/images/spinner.gif" />
+        <video
+          class="presentation__video presentation__child centered"
+          width="100%"
+          ng-show="!presentation.showImage"
+          ng-click="presentation.toggleView('presentation');"
+          id="presentation"
+          autoplay="autoplay"
+          poster="assets/images/spinner.gif"
+          ng-class="{
+            'active': !presentation.maximised,
+            'inactive': presentation.maximised }" />
+      </figure>
+    </div>
+
+    <div popup-container items="popupList"></div>
+    <div popup-container items="dialogList"></div>
+
+    <!-- DTMF keypad -->
+    <div dtmf class="key-pad-container" ng-show="controls.dtmfVisible"></div>
+
+  </div>
+</div>
+
+<div class="disconnect"></div>

@@ -1,0 +1,26 @@
+.screen {
+  @extend %unselectable;
+  background: $color-black-almost;
+  position: absolute;
+  top: 0;
+  left: 25%;
+  bottom: 0;
+  right: 0;
+
+  @include media-query(portable) {
+    top: 3em;
+    left: 0;
+  }
+
+  &.overlaid {
+    .screenbar {
+      opacity: 0;
+    }
+  }
+
+  &.hover {
+    .screenbar {
+      opacity: 1;
+    }
+  }
+}

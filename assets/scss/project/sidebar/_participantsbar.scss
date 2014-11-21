@@ -1,0 +1,36 @@
+.participantsbar {
+  position: absolute;
+  top: 3em;
+  left: 0;
+  right: 0;
+  height: 3em;
+  background: $color-white;
+  border-bottom: 1px solid $color-border;
+
+  input {
+    @extend %sans-serif-light;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border: 0;
+    background: transparent;
+    padding: 1em 2em;
+    line-height: 1.2em;
+    font-weight: 300;
+    color: $color-brand;
+
+    &:focus {
+      outline: 0;
+    }
+  }
+
+  .icon__search {
+    color: $color-grey-light;
+    font-size: 1.25em;
+    padding: .75em 1.5em;
+    position: absolute;
+    right: 0;
+  }
+}

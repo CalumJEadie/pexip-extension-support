@@ -1,0 +1,111 @@
+.key-pad {
+  @extend %container-popup;
+  border-color: rgba($color-brand, 0.75);
+  margin: 0;
+  padding: .5em;
+  text-align: center;
+  width: auto;
+
+  @include media-query(desk) {
+    top: 25%;
+  }
+
+  @include media-query(portable) {
+    left: 25%;
+    top: 15%;
+  }
+
+  &__display {
+    margin-bottom: .5em;
+
+    input {
+      background: $color-grey;
+      border: none;
+      font-size: 1.2em;
+      padding: .5em 0;
+      text-align: right;
+      max-width: 100%;
+    }
+  }
+
+  &__wrapper {
+    display: table;
+  }
+
+  &__row {
+    display: table-row;
+  }
+
+  &__item {
+    background: rgba($color-black-almost, 0.75);
+    border: 2px solid rgba($color-black, 0.5);
+    border-collapse: separate;
+    cursor: pointer;
+    display: table-cell;
+    padding: .5em;
+    width: 20%;
+
+      &:hover {
+        background: $color-orange;
+        color: $color-black;
+
+        .key-pad__letters {
+          color: $color-grey-dark;
+        }
+      }
+
+      &:active {
+        background: darken($color-brand, 10%);
+        color: $color-black-almost;
+      }
+  }
+
+  &__key {
+    font-size: 1.2em;
+  }
+
+  &__letters {
+    color: $color-grey-mid;
+    display: block;
+    min-height: 1.5em;
+    font-size: .9em;
+  }
+
+}
+
+
+
+.key-pad-container.ng-hide-add.ng-hide-add-active .key-pad,  // ng-hide-add ng-hide-add-active get added when ng-hide is active
+.key-pad-container.ng-hide-remove.ng-hide-remove-active .key-pad {
+  -webkit-transition: 0.2s linear all;
+  transition: 0.2s linear all;
+}
+
+.key-pad-container.ng-show .key-pad {
+  -webkit-animation: slideInDown 0.2s;
+  animation: slideInDown 0.2s;
+}
+
+.key-pad-container.ng-hide-add .key-pad {
+  -webkit-transition: 0.2s linear all;
+  transition: 0s linear all;
+  opacity: 1;
+}
+
+.key-pad-container.ng-hide-add-active .key-pad {
+  -webkit-transition: 0.2s linear all;
+  transition: 0.2s linear all;
+  top: 100%;
+}
+
+.key-pad-container.ng-hide .key-pad {
+  -webkit-animation: slideInUp 0.2s;
+  animation: slideInUp 0.2s;
+  top: 100%;
+}
+
+.key-pad-container .key-pad {
+  -webkit-animation: slideInUp 0.2s;
+  animation: slideInUp 0.2s;
+  top: 25%;
+}

@@ -1,0 +1,29 @@
+.conference {
+
+  &__details {
+    background: $color-brand;
+    border-bottom: 1px solid $color-orange-dark;
+    color: $color-white;
+    display: block;
+    padding: 1em 2em;
+    z-index: z("always-on-top");
+
+    .collapse & * {
+      visibility: hidden;
+    }
+  }
+
+  &__heading {
+    @extend %sans-serif-light;
+    @include user-select(text);
+    @include font-size(1);
+    display: inline-block;
+    margin: 0;
+    max-width: 90%;
+    overflow: hidden;
+    padding: 0;
+    text-overflow: ellipsis;
+    text-align: left;
+    white-space: nowrap;
+  }
+}

@@ -1,0 +1,45 @@
+.topbar {
+    background: $color-brand;
+    border-bottom: 1px solid $color-orange-dark;
+    color: $color-white;
+    height: 3em;
+    left: 0;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 0;
+    // z-index: 1000;
+    z-index: z("participant");
+
+  .logo {
+    background: url(../images/topbar-logo.png) no-repeat center center;
+    font-size: 1em;
+    font-weight: 400;
+    line-height: 2.8em;
+    margin-left: 2em;
+    text-indent: -6000px;
+  }
+
+  .conference {
+    @extend %user-select-text;
+    font-size: 1em;
+    font-weight: 400;
+    line-height: 2.9em;
+    margin-left: 4.5em;
+    margin-right: 4.5em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    white-space: nowrap;
+    z-index: 999999;
+  }
+
+  .icon {
+    color: inherit;
+    padding: .75em 1.5em;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}

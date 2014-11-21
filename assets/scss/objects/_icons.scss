@@ -1,0 +1,197 @@
+@font-face {
+  font-family: 'icomoon';
+  src:url('../fonts/icomoon/icomoon.eot?-t20kya');
+  src:url('../fonts/icomoon/icomoon.eot?#iefix-t20kya') format('embedded-opentype'),
+    url('../fonts/icomoon/icomoon.woff?-t20kya') format('woff'),
+    url('../fonts/icomoon/icomoon.ttf?-t20kya') format('truetype'),
+    url('../fonts/icomoon/icomoon.svg?-t20kya#icomoon') format('svg');
+  font-weight: fw("regular");
+  font-style: normal;
+}
+
+%icomoon {
+  font-family: 'icomoon';
+  font-style: normal;
+  font-variant: normal;
+  font-weight: fw("regular");
+  line-height: 1;
+  speak: none;
+  text-transform: none;
+
+  // /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@function char-from-code($iso-char) {
+  @return unquote('\"#{$iso-char}\"');
+}
+
+// set up the placeholders
+%icon {
+  @include font-size(1.2);
+  background: transparent;
+  border: none;
+  color: $color-grey-light;
+
+  &:hover,
+  &:active {
+    color: $color-white;
+  }
+
+  @each $icon, $unicode in (
+    about: \e363,
+    buzz: \f111,
+    close: \e36c,
+    disconnect: \e0dc,
+    fullscreen-disable: \e1c9,
+    fullscreen-enable: \e1c8,
+    host: \f0e3,
+    keypad: \e2a0,
+    locked: \e1d3,
+    menu: unquote("\"\\e2af\""),
+    menu-toggle: \e3b6,
+    mic-enable: \e06e,
+    mic-mute: \e06d,
+    participant-add: \e187,
+    participant-disconnect: \e0e3,
+    participant-enable: \e06e,
+    participant-mute: \e06d,
+    presenting: \e166,
+    roster-hide: \f054,
+    roster-show: \f053,
+    screen-present: \e604,
+    screen-stop-sharing: \e601,
+    search: \e1b7,
+    selfview-hide: \e600,
+    selfview-show: \e603,
+    unlocked: \e1d4,
+    video-enable: \e602,
+    video-hide: \e04e)
+  {
+    &-#{$icon}-before {
+      &:before {
+        /*
+        call the char-from-code function to attempt to escape
+         */
+        content: char-from-code($unicode);
+      }
+    }
+
+    &-#{$icon}-after {
+      &:after {
+        content: char-from-code($unicode);
+      }
+    }
+  }
+}
+
+.icon {
+  @extend %icomoon;
+  @extend %icon;
+
+  &__label {
+    @extend %visuallyhidden;
+  }
+
+  .disabled & {
+    color: $color-grey;
+  }
+
+  @each $icon-placeholder, $icon-content in (
+    about: before,
+    buzz: before,
+    close: before,
+    disconnect: before,
+    fullscreen-disable: before,
+    fullscreen-enable: before,
+    host: before,
+    keypad: before,
+    locked: before,
+    menu: before,
+    menu-toggle: before,
+    mic-enable: before,
+    mic-mute: before,
+    participant-add: before,
+    participant-disconnect: before,
+    participant-enable: before,
+    participant-mute: before,
+    presenting: before,
+    roster-hide: before,
+    roster-show: before,
+    screen-present: before,
+    screen-stop-sharing: before,
+    search: before,
+    selfview-hide: before,
+    selfview-show: before,
+    unlocked: before,
+    video-enable: before,
+    video-hide: before)
+  {
+    &__#{$icon-placeholder} {
+      @extend %icon-#{$icon-placeholder}-#{$icon-content};
+    }
+  }
+
+  &__buzz {
+    @include font-size(.8);
+    color: $color-brand;
+
+    &:hover {
+      color: $color-brand;
+    }
+  }
+
+  &__participant-add,
+  &__locked,
+  &__unlocked {
+    color: $color-white;
+    margin-top: .5em;
+    top: 0;
+    position: absolute;
+
+    &:hover {
+      background: transparent;
+      color: $color-grey-dark;
+    }
+  }
+
+  &__locked,
+  &__unlocked {
+    cursor: pointer;
+    left: .5em;
+    margin-right: .25em;
+  }
+
+  &__locked {
+    color: $color-red;
+
+    &:hover,
+    &:focus {
+      color: saturate( $color-red, 20% );
+    }
+  }
+
+  &__participant-add {
+    right: .5em;
+    margin-left: .25em;
+  }
+
+  &__close {
+    color: $color-grey-dark;
+  }
+
+  &__disconnect {
+    .screenbar & {
+      color: $color-red;
+
+      &:hover,
+      &:focus {
+        color: saturate( $color-red, 20% );
+        outline: none;
+      }
+    }
+  }
+
+
+}

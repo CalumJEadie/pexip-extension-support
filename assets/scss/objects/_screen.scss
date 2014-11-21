@@ -1,0 +1,16 @@
+.screen {
+  min-height: 100vh;
+  position: relative;
+
+  &.overlaid {
+    .controls {
+      opacity: 0;
+    }
+  }
+
+  &.hover {
+    .controls {
+      opacity: 1;
+    }
+  }
+}

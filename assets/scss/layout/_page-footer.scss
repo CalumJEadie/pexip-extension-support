@@ -1,0 +1,20 @@
+.page {
+
+  &-footer {
+    @include font-size(0.9);
+    max-width: 25em;
+    margin: 0 auto;
+    padding-bottom: 1em;
+    text-align: center;
+
+    a {
+      color: $color-grey;
+      border-bottom: 1px solid $color-grey-light;
+      margin: 0 1em;
+
+      &:hover {
+        color: $color-black;
+      }
+    }
+  }
+}
