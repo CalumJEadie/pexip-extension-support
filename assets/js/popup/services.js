@@ -2,10 +2,11 @@
 
 angular.module('pexapp.popup')
 	.service('PopupService', [
+		'$injector', // Add injector as dependency so we can resolve extensions when needed
 		'$timeout',
 		'$rootScope',
 		'LogService',
-		function ($timeout, $rootScope, LogService) {
+		function ($injector, $timeout, $rootScope, LogService) {
 			return {
 				/**
 				 * Create an alert box.
@@ -142,35 +143,55 @@ angular.module('pexapp.popup')
 				 * @param {Array} popups  The list of popups to add to
 				 * @param {String} message The message to display
 				 * @param {function(data)} callback Callback passing in data when YES clicked. No cancels
+				 *
+				 * @param {String} hook Optional. Name of hook.
 				 */
-				prompt: function confirm(popups, message, callback, options) {
-					var newPopup = {
-						popupType: 'prompt',
-						message: message,
-						buttons: [
-							{
-								'label': 'OK',
-								'callback': function(data, dataCheckbox) {
-									LogService.log('Popup.prompt: clicked OK');
-									LogService.log('Popup.prompt: ' + data);
-
-									callback(data, dataCheckbox);
-								},
-								'class': 'ok'
-							},
-							{
-								'label': 'Cancel',
-								'class': 'cancel',
-								'callback': function () {
-									// do nothing, this is the cancel button
-									LogService.log('Popup.prompt: clicked cancel');
-								}
+				prompt: function confirm(popups, message, callback, options, hook) {
+					var newPopup;
+					
+					// Check if hook is available and extension is loaded for hook
+					if (hook && $injector.has(hook)) {
+						var extension = $injector.get(hook);
+						newPopup = {
+							popupType: 'prompt',
+							extension: function(htmlElement, popupCb) { // Wrap extension in function for popup
+								extension.init(htmlElement, options, function(data, dataCheckbox) {
+									popupCb(); // Signal to popup that we're done
+									callback(data, dataCheckbox); // Pass result on to popup requestor
+								})
 							}
-						],
-						data: '',
-						timestamp: new Date().getTime(),
-						options: options
-					};
+						}
+					}
+					else
+					{
+						newPopup = {
+							popupType: 'prompt',
+							message: message,
+							buttons: [
+								{
+									'label': 'OK',
+									'callback': function(data, dataCheckbox) {
+										LogService.log('Popup.prompt: clicked OK');
+										LogService.log('Popup.prompt: ' + data);
+
+										callback(data, dataCheckbox);
+									},
+									'class': 'ok'
+								},
+								{
+									'label': 'Cancel',
+									'class': 'cancel',
+									'callback': function () {
+										// do nothing, this is the cancel button
+										LogService.log('Popup.prompt: clicked cancel');
+									}
+								}
+							],
+							data: '',
+							timestamp: new Date().getTime(),
+							options: options
+						};
+					}
 
 					popups.push(newPopup);
 

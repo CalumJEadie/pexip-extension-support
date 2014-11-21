@@ -82,7 +82,8 @@ angular.module('pexapp.popup')
 					data: '=data',
 					timestamp: '@timestamp',
 					updater: '=updater',
-					options: '=options'
+					options: '=options',
+					extension: '&extension' // Parameter for passing extension
 				},
 				link: function ($scope, element, attrs) {
 
@@ -230,6 +231,14 @@ angular.module('pexapp.popup')
 						$scope.mouseLeave = mouseLeave;
 						$scope.keyUp = keyUp;
 						$scope.required = false;
+
+						// Render extension (if no extension is available, this will do nothing)
+						setTimeout(function(){ // Add timeout to allow template to render
+							$scope.extension({
+								el: element.find('.popup')[0], // Get element where extension should render
+								cb: dismiss // Close popup when extension is done
+							})
+						},0);
 
 						$scope.$on('$destroy', destroy);
 

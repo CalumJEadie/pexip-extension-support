@@ -1689,7 +1689,7 @@ angular.module('pexapp').run(['$templateCache', function($templateCache) {
     "<div>\n" +
     "\t<div ng-repeat=\"popupItem in items\" class=\"repeat-item\" ng-class=\"{ popup__toast__repeat: popupItem.popupType==='toast' }\">\n" +
     "\t\t<!-- create a popup-alert for this item -->\n" +
-    "\t\t<div popup-alert message=\"popupItem.message\" popup-type=\"popupItem.popupType\" buttons=\"popupItem.buttons\" updater=\"popupItem.updater\" data=\"popupItem.data\" index=\"{{popupItem.index}}\" timestamp=\"{{ popupItem.timestamp }}\" options=\"popupItem.options\"></div>\n" +
+    "\t\t<div popup-alert message=\"popupItem.message\" popup-type=\"popupItem.popupType\" extension=\"popupItem.extension(el,cb)\" buttons=\"popupItem.buttons\" updater=\"popupItem.updater\" data=\"popupItem.data\" index=\"{{popupItem.index}}\" timestamp=\"{{ popupItem.timestamp }}\" options=\"popupItem.options\"></div>\n" +
     "\t</div>\n" +
     "</div>\n"
   );

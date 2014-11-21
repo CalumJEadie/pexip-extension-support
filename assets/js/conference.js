@@ -357,7 +357,8 @@ conference.controller('ConferenceController',
                 translationService.instant('CONFERENCE_ADD_PARTICIPANT_DIALOG'),
                 addParticipant, {
                     protocol: true
-                }
+                },
+				'externalPhonebook' // Indicate that this is an extension point
             );
         },
         disconnect : function(participant) {
