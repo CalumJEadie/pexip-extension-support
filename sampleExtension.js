@@ -3,7 +3,7 @@ angular.module('pexapp.popup')
 		return {
 			init: function(htmlElement, options, cb) {
 				htmlElement.innerHTML = '<p>Hello from extension</p>';
-				setTimeout(cb.bind(null, '', {}),2000);
+				//setTimeout(cb.bind(null, '', {}),2000);
 			}
 		}
 		
